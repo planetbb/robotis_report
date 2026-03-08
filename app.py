@@ -3,53 +3,10 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-# 1. 페이지 기본 설정 및 테마 적용
-st.set_page_config(page_title="로보티즈 기업분석 리포트", layout="wide")
+# 1. 페이지 설정
+st.set_page_config(page_title="ROBOTIS Enterprise Analysis 2026", layout="wide")
 
-# Custom CSS: JSX의 다크 모드 스타일 재현
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-    html, body, [data-testid="stAppViewContainer"] {
-        background-color: #0A0A0C;
-        color: #E0DDD5;
-        font-family: 'Noto Sans KR', sans-serif;
-    }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 24px;
-        background-color: #0D0D10;
-        border-bottom: 1px solid #1E1E24;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        background-color: transparent;
-        color: #555;
-        font-weight: 400;
-    }
-    .stTabs [aria-selected="true"] {
-        color: #E8C547 !important;
-        border-bottom: 2px solid #E8C547 !important;
-    }
-    .report-card {
-        background: #111114;
-        border: 1px solid #1E1E24;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
-    }
-    .kpi-title { font-size: 10px; color: #555; letter-spacing: 1px; margin-bottom: 8px; }
-    .kpi-value { font-size: 22px; font-weight: 700; }
-    .risk-banner {
-        background: linear-gradient(90deg, #FF444422, #FF8C6911);
-        border: 1px solid #FF444444;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# 2. 데이터셋 (JSX의 데이터 객체들을 파이썬 딕셔너리로 변환)
+# 2. 모든 원본 데이터셋 정의 (JSX 데이터 1:1 매칭)
 revenue_data = pd.DataFrame([
     {"year": "2021", "rev": 224, "op": -9, "opM": -4.2},
     {"year": "2022", "rev": 259, "op": -22, "opM": -8.4},
@@ -59,104 +16,146 @@ revenue_data = pd.DataFrame([
     {"year": "2026F", "rev": 680, "op": 110, "opM": 16.2},
 ])
 
-radar_data = pd.DataFrame([
-    {"subject": "기술 원천성", "robotis": 92, "unitree": 70, "agibot": 65, "maxon": 95},
-    {"subject": "가격 경쟁력", "robotis": 70, "unitree": 98, "agibot": 90, "maxon": 20},
-    {"subject": "양산 규모", "robotis": 45, "unitree": 95, "agibot": 98, "maxon": 60},
-    {"subject": "글로벌 생태계", "robotis": 85, "unitree": 55, "agibot": 40, "maxon": 80},
-    {"subject": "수익성", "robotis": 72, "unitree": 50, "agibot": 30, "maxon": 85},
-    {"subject": "규제 리스크", "robotis": 90, "unitree": 40, "agibot": 35, "maxon": 95},
-])
+valuation_data = [
+    {"label": "현재 주가 (2026.03)", "value": "242,000원", "color": "#E8C547"},
+    {"label": "시가총액", "value": "3.67조원", "color": "#E8C547"},
+    {"label": "2025 매출 (추정)", "value": "약 420억원", "color": "#aaa"},
+    {"label": "PSR (주가/매출)", "value": "약 87x", "color": "#FF8C69", "warn": True},
+    {"label": "PBR", "value": "약 12x", "color": "#FF8C69", "warn": True},
+    {"label": "애널리스트 목표가 평균", "value": "149,000원", "color": "#4EC9B0"},
+]
 
-# 3. 헤더 영역
-col_h1, col_h2 = st.columns([2, 1])
-with col_h1:
-    st.markdown("""
-        <div style='display: flex; align-items: center; gap: 15px;'>
-            <div style='background: linear-gradient(135deg,#E8C547,#FF8C69); width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justifyContent: center; font-size: 22px;'>🤖</div>
-            <div>
-                <div style='font-size: 11px; color: #555; letter-spacing: 2px;'>KOSDAQ | 자본재 | 기업분석</div>
-                <div style='font-size: 24px; font-weight: 700;'>로보티즈 <span style='color: #999; font-size: 16px; font-weight: 400;'>(108490)</span></div>
-            </div>
+china_rivals = [
+    {"name": "Unitree (🇨🇳)", "threat": "CRITICAL", "desc": "G1 휴머노이드 $16,000 / R1 $5,900. 저가 공세 심화", "strength": "수직계열화 완성", "color": "#FF4444"},
+    {"name": "AgiBot (상하이)", "threat": "HIGH", "desc": "LG전자·미래에셋 전략 투자. 2025년 5,200대 출하", "strength": "양산 규모 최대", "color": "#FF8C69"},
+    {"name": "Fourier (상하이)", "threat": "HIGH", "desc": "의료·재활 특화. 힘 제어 기반 파지 기술 강점", "strength": "의료 실증 데이터", "color": "#FF8C69"},
+    {"name": "MAXON (🇨🇭)", "threat": "MED", "desc": "초정밀 산업용. 단가 다이나믹셀比 3~10배", "strength": "최고 신뢰성/정밀도", "color": "#4EC9B0"},
+]
+
+pipeline = [
+    {"product": "AI 워커 (고정형)", "stage": "출하 중", "rev": "27년 632억F", "target": "27년 1,000대", "icon": "🦾"},
+    {"product": "로봇 손 HX5", "stage": "CES 공개", "rev": "26년 본격 반영", "target": "글로벌 빅테크 납품", "icon": "🤲"},
+    {"product": "AI 워커 (모바일)", "stage": "협의 중", "rev": "26년 B2B 본격화", "target": "25 4Q 출시", "icon": "🚀"},
+    {"product": "DYNAMIXEL Y", "stage": "개발 중", "rev": "ASP 상승 기여", "target": "26년 양산 확대", "icon": "🔩"},
+]
+
+# 3. Custom CSS (JSX의 디자인 스타일 완벽 재현)
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+    [data-testid="stAppViewContainer"] { background-color: #0A0A0C; color: #E0DDD5; font-family: 'Noto Sans KR', sans-serif; }
+    .card { background: #111114; border: 1px solid #1E1E24; border-radius: 12px; padding: 20px; margin-bottom: 10px; }
+    .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+    .stTabs [data-baseweb="tab-list"] { background-color: #0D0D10; border-bottom: 1px solid #1E1E24; }
+    .stTabs [data-baseweb="tab"] { color: #555; padding: 10px 20px; }
+    .stTabs [aria-selected="true"] { color: #E8C547 !important; border-bottom: 2px solid #E8C547 !important; }
+    </style>
+""", unsafe_allow_html=True)
+
+# 4. 헤더
+st.markdown(f"""
+    <div style='display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1E1E24; margin-bottom: 20px;'>
+        <div>
+            <span style='color: #555; font-size: 11px; letter-spacing: 2px;'>KOSDAQ | 로봇 부품 | 기업분석</span>
+            <h1 style='margin: 0; font-size: 28px;'>로보티즈 <span style='color: #999; font-size: 16px;'>(108490)</span></h1>
         </div>
-    """, unsafe_allow_html=True)
+        <div style='text-align: right;'>
+            <div style='font-family: "IBM Plex Mono"; font-size: 28px; color: #E8C547; font-weight: 600;'>242,000<span style='font-size: 14px; color: #666;'>원</span></div>
+            <div style='font-size: 12px; color: #4EC9B0;'>2026.03 UPDATE</div>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
 
-with col_h2:
-    st.markdown("<div style='text-align: right;'><div style='font-size: 26px; font-weight: 600; color: #E8C547;'>242,000<span style='font-size: 14px; color: #666;'>원</span></div><div style='font-size: 12px; color: #555;'>시총 3.67조 · 2026.03 UPDATE</div></div>", unsafe_allow_html=True)
+# 5. 메인 탭 구성
+tabs = st.tabs(["체크포인트", "파이프라인", "경쟁 분석", "실적 & 밸류에이션"])
 
-# 4. 탭 구성
-tabs = st.tabs(["체크포인트", "기업 개요", "경쟁 분석", "실적 추이"])
-
-# --- TAB 0: 체크포인트 ---
+# --- TAB 1: 체크포인트 ---
 with tabs[0]:
-    st.markdown("<div class='risk-banner'>■ 로보티즈는 피지컬 AI 시대 핵심 부품 전문기업으로 2025년 첫 연간 흑자 전환 달성.</div>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.markdown("#### 📋 핵심 체크포인트")
+        checkpoints = [
+            ("📌 액추에이터 해외 매출 확대", "2025 4Q 영업이익률 36% 급등. 고부가 로봇 손 반영"),
+            ("📌 AI 워커 수주 가시화", "오픈AI 공급 협의 중. 2027년 1,000대 목표"),
+            ("📌 LG전자 협업 구체화", "휴머노이드 공동연구 및 실질 납품 여부 주목")
+        ]
+        for title, note in checkpoints:
+            st.markdown(f"<div class='card'><b>{title}</b><br><small style='color:#666'>{note}</small></div>", unsafe_allow_html=True)
     
-    kpi_cols = st.columns(4)
-    kpi_data = [
-        {"label": "2025 매출(E)", "val": "420억", "color": "#E8C547"},
-        {"label": "2025 영업이익(E)", "val": "+52억", "color": "#4EC9B0"},
-        {"label": "4Q25 OPM", "val": "36%", "color": "#7B9FFF"},
-        {"label": "2026 매출 목표", "val": "680억(F)", "color": "#FF8C69"},
-    ]
-    for i, kpi in enumerate(kpi_data):
-        with kpi_cols[i]:
+    with col2:
+        st.markdown("#### ⚠️ 리스크 요인")
+        st.error("매출의 98% 다이나믹셀 단일 의존 리스크")
+        st.warning("시총 3.67조 vs 매출 420억 (PSR 87x 극단적 프리미엄)")
+        st.info("중국산(Unitree 등) 저가 휴머노이드 침투 속도")
+
+# --- TAB 2: 파이프라인 ---
+with tabs[1]:
+    st.markdown("#### 🚀 제품 로드맵 & 파이프라인")
+    cols = st.columns(4)
+    for i, p in enumerate(pipeline):
+        with cols[i]:
             st.markdown(f"""
-                <div class="report-card" style="border-top: 2px solid {kpi['color']}">
-                    <div class="kpi-title">{kpi['label']}</div>
-                    <div class="kpi-value" style="color: {kpi['color']}">{kpi['val']}</div>
+                <div class='card' style='text-align: center;'>
+                    <div style='font-size: 30px;'>{p['icon']}</div>
+                    <div style='color: #E8C547; font-weight: 700; margin-top: 10px;'>{p['product']}</div>
+                    <div style='font-size: 11px; color: #4EC9B0;'>{p['stage']}</div>
+                    <hr style='border: 0.5px solid #222'>
+                    <div style='font-size: 11px; color: #888;'>목표: {p['target']}</div>
+                    <div style='font-size: 11px; color: #aaa;'>예상매출: {p['rev']}</div>
                 </div>
             """, unsafe_allow_html=True)
 
-    c1, c2 = st.columns(2)
-    with c1:
-        st.subheader("📋 향후 주목 체크포인트")
-        st.checkbox("액추에이터 해외 매출 확대 속도", value=True)
-        st.caption("2025 4Q 영업이익률 36%로 급등. 고부가 로봇 손 제품 반영")
-        st.checkbox("AI 워커 양산 및 수주 가시화")
-        st.caption("2025년 70대 → 2027년 1,000대 목표")
-    
-    with c2:
-        st.subheader("⚠️ 리스크 요인")
-        st.error("매출의 98% 다이나믹셀 단일 의존 리스크")
-        st.warning("시총 3.67조 vs 매출 420억 (PSR 87x 고평가)")
-
-# --- TAB 2: 경쟁 분석 (레이더 차트 포함) ---
+# --- TAB 3: 경쟁 분석 ---
 with tabs[2]:
-    st.markdown("<div class='risk-banner'>🚨 중국발 가격 파괴 위협 — 유니트리 R1 $5,900 (미국산의 1/8 수준)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background: #FF444422; border: 1px solid #FF444444; padding: 15px; border-radius: 10px; color: #FF8C69;'>🚨 <b>중국발 가격 파괴:</b> 유니트리 R1 $5,900 — 글로벌 시장 잠식 위험도 'CRITICAL'</div>", unsafe_allow_html=True)
+    st.write("")
     
-    col_r1, col_r2 = st.columns([1, 1])
-    with col_r1:
-        st.markdown("#### 🕸️ 글로벌 경쟁력 비교")
-        fig_radar = go.Figure()
-        for col, color in zip(['robotis', 'unitree', 'maxon'], ['#E8C547', '#FF4444', '#4EC9B0']):
-            fig_radar.add_trace(go.Scatterpolar(
-                r=radar_data[col],
-                theta=radar_data['subject'],
-                fill='toself',
-                name=col.upper(),
-                line_color=color
-            ))
-        fig_radar.update_layout(
-            polar=dict(radialaxis=dict(visible=True, range=[0, 100]), bgcolor='#111114'),
-            showlegend=True, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(color="#666")
-        )
-        st.plotly_chart(fig_radar, use_container_width=True)
+    col_c1, col_c2 = st.columns([1, 1])
+    with col_c1:
+        st.markdown("#### 🇨🇳 글로벌 경쟁사 현황")
+        for r in china_rivals:
+            st.markdown(f"""
+                <div class='card' style='border-left: 4px solid {r['color']}'>
+                    <div style='display: flex; justify-content: space-between;'>
+                        <span style='font-weight: 700;'>{r['name']}</span>
+                        <span class='status-badge' style='background: {r['color']}22; color: {r['color']}'>{r['threat']}</span>
+                    </div>
+                    <div style='font-size: 12px; margin-top: 8px;'>{r['desc']}</div>
+                    <div style='font-size: 11px; color: #4EC9B0; margin-top: 5px;'>핵심강점: {r['strength']}</div>
+                </div>
+            """, unsafe_allow_html=True)
 
-    with col_r2:
-        st.markdown("#### ⚔️ 로보티즈 차별화 포인트")
-        st.info("**vs 중국:** 오픈소스 생태계 80% 점유, 글로벌 연구 표준")
-        st.info("**vs 유럽:** 모듈형 설계로 인한 가격 경쟁력 및 피지컬AI 통합")
+    with col_c2:
+        st.markdown("#### 🕸️ 기술력/시장성 레이더")
+        radar_df = pd.DataFrame([
+            {"subject": "정밀도", "로보티즈": 95, "중국산": 70},
+            {"subject": "가격", "로보티즈": 60, "중국산": 98},
+            {"subject": "생태계", "로보티즈": 90, "중국산": 50},
+            {"subject": "양산력", "로보티즈": 45, "중국산": 95},
+        ])
+        fig = go.Figure()
+        fig.add_trace(go.Scatterpolar(r=radar_df['로보티즈'], theta=radar_df['subject'], fill='toself', name='로보티즈', line_color='#E8C547'))
+        fig.add_trace(go.Scatterpolar(r=radar_df['중국산'], theta=radar_df['subject'], fill='toself', name='중국 경쟁사', line_color='#FF4444'))
+        fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#888", height=350)
+        st.plotly_chart(fig, use_container_width=True)
 
-# --- TAB 3: 실적 추이 ---
+# --- TAB 4: 실적 & 밸류에이션 ---
 with tabs[3]:
-    st.markdown("#### 📈 연도별 실적 추이 (억원)")
-    fig_rev = px.bar(revenue_data, x='year', y='rev', text='rev', 
-                     title="매출액 추이", color_discrete_sequence=['#E8C547'])
-    fig_rev.add_scatter(x=revenue_data['year'], y=revenue_data['opM'], name="영업이익률(%)", 
-                        yaxis="y2", line=dict(color='#4EC9B0'))
-    fig_rev.update_layout(
-        yaxis2=dict(title="이익률(%)", overlaying="y", side="right"),
-        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#888"
-    )
-    st.plotly_chart(fig_rev, use_container_width=True)
+    col_v1, col_v2 = st.columns([2, 1])
+    with col_v1:
+        st.markdown("#### 📊 실적 추이 (억원)")
+        fig_rev = px.bar(revenue_data, x='year', y='rev', text='rev', color_discrete_sequence=['#E8C547'])
+        fig_rev.add_scatter(x=revenue_data['year'], y=revenue_data['op'], name="영업이익", line=dict(color='#4EC9B0', width=3))
+        fig_rev.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#888")
+        st.plotly_chart(fig_rev, use_container_width=True)
+    
+    with col_v2:
+        st.markdown("#### 💎 밸류에이션 요약")
+        for v in valuation_data:
+            warn_style = "border: 1px solid #FF8C69;" if v.get("warn") else ""
+            st.markdown(f"""
+                <div class='card' style='{warn_style}'>
+                    <div style='font-size: 11px; color: #666;'>{v['label']}</div>
+                    <div style='font-size: 18px; font-weight: 700; color: {v['color']}'>{v['value']}</div>
+                </div>
+            """, unsafe_allow_html=True)
