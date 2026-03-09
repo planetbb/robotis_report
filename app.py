@@ -98,6 +98,7 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     padding: 10px 28px;
     border-top: 1px solid #1E1E28;
     background: #0D0D12;
+    position: relative;
 }
 .slide-body { padding: 22px 28px; }
 
@@ -1357,31 +1358,68 @@ for _i in range(n_slides):
         _dots += '<div style="width:8px;height:8px;border-radius:50%;background:#2A2A35;display:inline-block;"></div>'
 _dots += '</div>'
 
-# 슬라이드 상단 타이틀바 HTML
+# ── 상단 타이틀바
 _topbar = f"""
 <div class="slide-frame">
   <div class="slide-topbar">
-    <div style="font-size:21px;font-weight:700;color:#E0DDD5;letter-spacing:-0.3px;">
-      {cur_sec}&nbsp;<span style="color:#333;">›</span>&nbsp;<span style="color:#E8C547;">{cur_slide}</span>
+
+    <!-- 왼쪽: 섹션명 + 슬라이드 제목 -->
+    <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+      <div style="font-size:13px;color:#555;font-family:'IBM Plex Mono',monospace;
+                  white-space:nowrap;letter-spacing:0.5px;">
+        {cur_sec}
+      </div>
+      <span style="color:#2A2A35;font-size:16px;">›</span>
+      <div style="font-size:18px;font-weight:700;color:#E8C547;
+                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+        {cur_slide}
+      </div>
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#444;letter-spacing:1px;">
-      ROBOTIS 108490 &nbsp;·&nbsp; 2026.03 &nbsp;·&nbsp; {si+1}/{n_slides}
+
+    <!-- 오른쪽: 페이지 카운터 (크게) + 배지 -->
+    <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:13px;color:#444;font-family:'IBM Plex Mono',monospace;">ROBOTIS 108490 · 2026.03</span>
+      </div>
+      <div style="background:#1E1E28;border:1px solid #2A2A35;border-radius:8px;
+                  padding:5px 14px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;color:#555;font-family:'IBM Plex Mono',monospace;">
+          {cur_sec.split()[-1] if ' ' in cur_sec else cur_sec}
+        </span>
+        <span style="font-size:18px;font-weight:800;color:#E8C547;
+                     font-family:'IBM Plex Mono',monospace;letter-spacing:1px;">
+          {si+1}/{n_slides}
+        </span>
+      </div>
     </div>
+
   </div>
   <div class="slide-body">
 """
 
-# 슬라이드 하단 푸터 HTML
+# ── 하단 푸터: 점 인디케이터 + ‹ 페이지 › 버튼
+_prev_disabled = "opacity:0.2;cursor:not-allowed;" if si == 0 else "cursor:pointer;"
+_next_disabled = "opacity:0.2;cursor:not-allowed;" if si == n_slides - 1 else "cursor:pointer;"
+
 _footer = f"""
   </div>
   <div class="slide-footer">
+    <!-- 점 인디케이터 -->
     {_dots}
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#333;">{cur_sec}</div>
+    <!-- 중앙 페이지 표시 -->
+    <div style="font-size:14px;color:#555;font-family:'IBM Plex Mono',monospace;
+                position:absolute;left:50%;transform:translateX(-50%);">
+      {si+1} / {n_slides}
+    </div>
+    <!-- 우측 섹션명 -->
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2A2A35;">
+      ROBOTIS IR
+    </div>
   </div>
 </div>
 """
 
-# 레이아웃: [좁은컬럼=prev버튼] [넓은컬럼=슬라이드] [좁은컬럼=next버튼]
+# ── 레이아웃: [prev] [슬라이드] [next]
 _col_prev, _col_main, _col_next = st.columns([1, 26, 1])
 
 with _col_prev:
