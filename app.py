@@ -354,7 +354,7 @@ SECTIONS = {
     "✅ 체크포인트":   ["KPI 요약", "체크포인트 & 리스크", "주가 이벤트"],
     "🏢 기업 개요":    ["기업 정보 & 주주", "제품 포트폴리오"],
     "📡 마켓 포지셔닝":["프로토콜 오너 해자", "SDK & B2B 레퍼런스", "모듈형 vs 수직계열화", "TAM & 채택률", "수혜 4단계 로드맵"],
-    "🔧 파이프라인":   ["유상증자 자금계획", "제품 로드맵", "파이프라인 현황"],
+    "🔧 파이프라인":   ["유상증자 자금계획", "QDD & 우즈벡 거점", "테슬라 공급 시나리오", "미국 관세 규제", "제품 로드맵", "파이프라인 현황"],
     "⚔️ 경쟁 분석":    ["중국 경쟁사 위협", "경쟁력 비교 레이더", "K-로봇 재무 비교"],
     "📈 실적 추이":    ["연간 실적 차트", "분기 실적 & 레이더"],
     "💰 밸류에이션":   ["밸류에이션 지표", "목표주가 & 종합의견"],
@@ -955,6 +955,251 @@ def slide_capex():
       우즈베키스탄을 글로벌 생산·데이터 거점으로 구축.
     </div>""", unsafe_allow_html=True)
 
+
+def slide_qdd():
+    """QDD 심층분석 + 우즈벡 데이터팩토리"""
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown(sec_lbl("🔩","QDD(준직접구동) — 왜 핵심인가"), unsafe_allow_html=True)
+        qdd_items = [
+            {"title":"기존 DYNAMIXEL 한계","color":"#FF8C69",
+             "body":"높은 감속비 → 역구동성 낮음 → 외부 충격 시 관절 파손 위험. 강화학습 기반 로봇이 필요한 '자연스러운 컴플라이언스' 구현 어려움."},
+            {"title":"QDD가 해결하는 것","color":"#4EC9B0",
+             "body":"저감속비(~10:1 이하) + 직접 토크 제어 → 역구동성 극대화. 충격흡수·힘 감지·자연스러운 관절 움직임. 강화학습 에이전트가 실제 로봇에서 학습 가능."},
+            {"title":"시장 포지셔닝","color":"#E8C547",
+             "body":"테슬라 옵티머스·Figure AI·1X 등 차세대 휴머노이드가 모두 QDD 기반으로 전환 중. 현재 선두 공급사는 중국업체. 로보티즈 QDD 양산 시 다이나믹셀 생태계 + QDD 기술의 결합으로 독보적 포지션."},
+        ]
+        for q in qdd_items:
+            st.markdown(f"""
+            <div style="background:#0A0A0C;border-radius:8px;padding:12px 14px;margin-bottom:8px;">
+              <div style="font-size:14px;color:{q['color']};font-weight:600;margin-bottom:6px;">{q['title']}</div>
+              <div style="font-size:22px;color:#777;line-height:1.7;">{q['body']}</div>
+            </div>""", unsafe_allow_html=True)
+
+        # Capa 목표
+        st.markdown(sec_lbl("🎯","액추에이터 생산 Capa 목표"), unsafe_allow_html=True)
+        for label, val, pct, color in [
+            ("현재 (2025)","연 30만대",10,"#FF8C69"),
+            ("2027 목표","연 210~300만대",70,"#E8C547"),
+            ("배율","7배 이상 확대",100,"#4EC9B0"),
+        ]:
+            st.markdown(f"""
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                <span style="font-size:22px;color:#888;">{label}</span>
+                <span style="font-size:22px;color:{color};font-family:'IBM Plex Mono',monospace;font-weight:600;">{val}</span>
+              </div>
+              {prog_bar(pct, color)}
+            </div>""", unsafe_allow_html=True)
+
+    with c2:
+        st.markdown(sec_lbl("🌍","우즈베키스탄 데이터팩토리"), unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background:#0A0A14;border:1px solid #7B9FFF33;border-radius:8px;padding:14px 16px;margin-bottom:10px;">
+          <div style="font-size:14px;color:#7B9FFF;font-weight:600;margin-bottom:10px;">전략적 선택 배경</div>""",
+        unsafe_allow_html=True)
+        for t in [
+            "2025년 8월 이미 1단계 운영 개시 (공시 이전 선행 투자)",
+            "우즈벡 경제부총리 직접 지원 — 국가전략사업 지정",
+            "2만평(6.6만㎡) 부지 + 세제혜택·인프라 지원 즉시 집행",
+            "중국 대비 저렴한 인건비 + 자동차 산업 기반 제조 인프라",
+            "미·중 무역갈등 지정학 리스크 완전 회피 가능 위치",
+        ]:
+            st.markdown(f'<div style="font-size:22px;color:#777;line-height:1.6;display:flex;gap:7px;margin-bottom:4px;"><span style="color:#7B9FFF;">•</span>{t}</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="background:#0A0A14;border:1px solid #C084FC33;border-radius:8px;padding:14px 16px;margin-bottom:10px;">
+          <div style="font-size:14px;color:#C084FC;font-weight:600;margin-bottom:10px;">데이터팩토리가 만드는 것</div>""",
+        unsafe_allow_html=True)
+        for t in [
+            "로봇 관제 + Human-Robot Interaction 실세계 데이터 대규모 수집",
+            "AI 파운데이션 모델 학습용 피지컬 데이터 양산 (행동 데이터)",
+            "하드웨어 제조사 → 데이터 기반 AI 기업으로 사업모델 전환 신호",
+            "2026년 288억 투입 (데이터팩토리·가공·모터 시설), 2028년 2차 투자",
+        ]:
+            st.markdown(f'<div style="font-size:22px;color:#777;line-height:1.6;display:flex;gap:7px;margin-bottom:4px;"><span style="color:#C084FC;">•</span>{t}</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown(sec_lbl("📅","투자 집행 일정"), unsafe_allow_html=True)
+        for period, desc, color in [
+            ("2025 8월","우즈벡 데이터팩토리 1단계 운영 개시","#4EC9B0"),
+            ("2025 12월","유상증자 신주 상장 완료","#4EC9B0"),
+            ("2026 상반기","우즈벡 공장 인수/신설 여부 확정","#E8C547"),
+            ("2026 하반기","288억 1차 집행 — 데이터팩토리·정밀가공·모터 시설","#E8C547"),
+            ("2028 하반기","2차 집행 — 정밀가공 시설 추가 확충","#7B9FFF"),
+        ]:
+            st.markdown(f"""
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;">
+              <div style="flex-shrink:0;background:{color}22;color:{color};border-radius:4px;
+                          padding:2px 8px;font-size:20px;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">{period}</div>
+              <div style="font-size:22px;color:#777;line-height:1.5;">{desc}</div>
+            </div>""", unsafe_allow_html=True)
+
+
+def slide_tesla():
+    """테슬라 옵티머스 공급 시나리오"""
+    # 헤더
+    st.markdown("""
+    <div style="background:linear-gradient(135deg,#0D0D10,#12100A);border:1px solid #E8C54755;
+                border-radius:10px;padding:14px 20px;margin-bottom:14px;display:flex;gap:14px;align-items:center;">
+      <span style="font-size:26px;flex-shrink:0;">⚡</span>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#E8C547;margin-bottom:4px;">테슬라 옵티머스 액추에이터 공급 — 파이프라인 최대 카탈리스트</div>
+        <div style="font-size:22px;color:#666;">확정 시 로보티즈 밸류에이션 전면 재정의 수준. 현재 협의 여부 미공개.</div>
+      </div>
+    </div>""", unsafe_allow_html=True)
+
+    # 현황 팩트 3종
+    fact_cols = st.columns(3)
+    for col, icon, title, color, body in zip(fact_cols,
+        ["🤖","🇨🇳","⚠️"],
+        ["옵티머스 액추에이터 구조","현재 주요 공급사","생산 지연 리스크"],
+        ["#7B9FFF","#FF8C69","#FF4444"],
+        [
+            "28개 자체 설계 액추에이터 탑재. 하체 구동계가 원가의 약 25% 차지. 테슬라는 핵심 부품 내재화 지향.",
+            "산화 인텔리전트 컨트롤스(중국)에 약 9,460억원($6.85억) 규모 리니어 액추에이터 발주 (2025.10 보도). 18만대분 추정.",
+            "2025년 목표 5,000대 → 2,000대 → 실제 수백대 수준 달성. 로봇 손 정밀제어 기술이 최대 병목. 2026년 대량양산 불투명.",
+        ]):
+        with col:
+            st.markdown(f"""
+            <div style="background:#0A0A0C;border-radius:8px;padding:14px;border:1px solid {color}33;height:100%;">
+              <div style="font-size:20px;margin-bottom:6px;">{icon}</div>
+              <div style="font-size:14px;color:{color};font-weight:600;margin-bottom:8px;">{title}</div>
+              <div style="font-size:22px;color:#777;line-height:1.7;">{body}</div>
+            </div>""", unsafe_allow_html=True)
+
+    st.markdown('<div style="height:10px"/>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:14px;color:#888;font-weight:600;margin-bottom:10px;">📋 로보티즈 공급 시나리오 분석</div>', unsafe_allow_html=True)
+
+    scen_cols = st.columns(3)
+    scenarios = [
+        {"label":"베스트 케이스","icon":"🚀","prob":"15%","color":"#4EC9B0",
+         "title":"다이나믹셀 Y 시리즈 / 로봇 손 공급 확정",
+         "cond":"테슬라가 중국산 의존 탈피를 위해 한국 대안 채택. 미·중 무역전쟁 심화 시 가속.",
+         "impact":"연간 수천억원 규모 B2B 계약. PSR 리레이팅 완전 정당화. 주가 재급등 트리거.",
+         "timeline":"2026 하반기~2027"},
+        {"label":"베이스 케이스","icon":"🔬","prob":"45%","color":"#E8C547",
+         "title":"R&D·소량 납품 → 검증 단계",
+         "cond":"보스턴다이내믹스 레퍼런스 활용, 테슬라 엔지니어링 팀에 샘플 공급. 공식 공급사 미획득.",
+         "impact":"직접 매출 미미. 단, 공급사 등록 자체가 주가 모멘텀. 2027년 이후 확대 기대감 유지.",
+         "timeline":"2026년 내"},
+        {"label":"베어 케이스","icon":"❌","prob":"40%","color":"#FF8C69",
+         "title":"테슬라 완전 내재화 — 공급 불발",
+         "cond":"테슬라가 자체 액추에이터 수직계열화 완성. 산화·중국 공급망 유지.",
+         "impact":"옵티머스 카탈리스트 소멸. PSR 87배 정당화 근거 약화. 주가 조정 압력.",
+         "timeline":"옵티머스 V3 공개(26년 1Q) 후 윤곽"},
+    ]
+    for col, s in zip(scen_cols, scenarios):
+        with col:
+            st.markdown(f"""
+            <div style="background:#0A0A0C;border-radius:8px;padding:14px;border:1px solid {s['color']}44;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <span style="font-size:14px;font-weight:700;color:{s['color']}">{s['icon']} {s['label']}</span>
+                <span style="font-size:20px;background:{s['color']}22;color:{s['color']};padding:2px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;">P≈{s['prob']}</span>
+              </div>
+              <div style="font-size:22px;color:#C0BDB4;font-weight:600;margin-bottom:8px;line-height:1.5;">{s['title']}</div>
+              <div style="font-size:22px;color:#666;line-height:1.6;margin-bottom:6px;"><span style="color:#888;">조건: </span>{s['cond']}</div>
+              <div style="font-size:22px;color:#666;line-height:1.6;margin-bottom:6px;"><span style="color:{s['color']}">임팩트: </span>{s['impact']}</div>
+              <div style="font-size:20px;color:#444;font-family:'IBM Plex Mono',monospace;">⏱ {s['timeline']}</div>
+            </div>""", unsafe_allow_html=True)
+
+    st.markdown('<div style="height:10px"/>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="background:#0F1B0F;border:1px solid #4EC9B033;border-radius:8px;padding:12px 16px;">
+      <div style="font-size:14px;color:#4EC9B0;font-weight:700;margin-bottom:8px;">🎯 투자자 핵심 체크포인트</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">""", unsafe_allow_html=True)
+    for t, d in [
+        ("2026 Q1","옵티머스 V3 공개 — 액추에이터 공급사 명단 노출 여부"),
+        ("2026 Q2","테슬라 2Q26 실적 — 옵티머스 생산 가이던스 형성"),
+        ("상시 모니터","미·중 관세 강화 → 중국 부품 의존도 탈피 수혜 속도"),
+        ("2025 실적","보스턴다이내믹스 납품 지속 여부 (신뢰 레퍼런스)"),
+    ]:
+        st.markdown(f"""
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="flex-shrink:0;background:#4EC9B022;color:#4EC9B0;border-radius:4px;
+                      padding:2px 8px;font-size:20px;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">{t}</div>
+          <div style="font-size:22px;color:#777;line-height:1.6;">{d}</div>
+        </div>""", unsafe_allow_html=True)
+    st.markdown("""</div>
+      <div style="margin-top:8px;font-size:20px;color:#444;border-top:1px solid #1A2A1A;padding-top:8px;">
+        ⚠️ 본 시나리오는 공개 정보 기반 추정이며 로보티즈-테슬라 간 공식 계약 여부는 미확인입니다.
+      </div>
+    </div>""", unsafe_allow_html=True)
+
+
+def slide_tariff():
+    """미국 내 중국산 로봇 부품 규제 팩트체크"""
+    st.markdown("""
+    <div style="background:linear-gradient(135deg,#0D0D10,#0A0A14);border:1px solid #7B9FFF44;
+                border-radius:10px;padding:14px 20px;margin-bottom:14px;display:flex;gap:14px;align-items:center;">
+      <span style="font-size:26px;flex-shrink:0;">⚖️</span>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#7B9FFF;margin-bottom:4px;">팩트체크: 미국 내 중국산 로봇 부품 규제 현황 (2026.03 기준)</div>
+        <div style="font-size:22px;color:#666;">규제 강화는 로보티즈의 지정학적 해자 — 단, 현재는 "조사 중" 단계임에 주의</div>
+      </div>
+    </div>""", unsafe_allow_html=True)
+
+    reg_layers = [
+        {"layer":"① 섹션 232 조사 (핵심)","status":"조사 진행 중","sc":"#E8C547","icon":"🔍",
+         "body":"2025년 9월 2일 미 상무부, 로봇·산업기계 및 부품 수입의 안보 영향 조사 개시. 조사 기간 최대 270일 → 2026년 5월 30일까지 보고서 제출. 이후 대통령이 90일 내 관세·쿼터 등 조치 결정.",
+         "impact":"결정 시 중국산 로봇 부품에 고관세 부과 가능. Section 301 관세(25%)에 추가 중첩 적용.",
+         "robotis":"🟢 수혜: 한국산은 KORUS FTA 적용으로 우대 가능성. Business Roundtable이 한국·일본·EU 등 우방국 제품 예외 적용 권고."},
+        {"layer":"② 휴머노이드 로봇법 (S.3275)","status":"법안 발의 (미통과)","sc":"#FF8C69","icon":"🏛️",
+         "body":"2025년 초 미 상원 발의. 연방 정부가 중국·이란·북한·러시아 군사 공급업체 제품 포함 AI 휴머노이드 구매 금지. 현재 위원회 심의 중, 민간 판매 제한은 미포함.",
+         "impact":"연방 정부 조달 차단. 민간 시장 직접 규제는 아직 없음.",
+         "robotis":"🟢 간접 수혜: 중국산 휴머노이드 연방 조달 금지 → 미국 정부 파트너 수요에서 한국산 부각."},
+        {"layer":"③ 기존 관세 누적 (현행)","status":"즉시 적용 중","sc":"#FF4444","icon":"💸",
+         "body":"Section 301: 중국산 로봇·부품에 25% 관세. 2025년 추가 상호관세 145% 부과(90일 유예 후 협상 중). 중국 희토류 수출 규제 맞대응으로 공급망 리스크 추가.",
+         "impact":"중국산 액추에이터·모터 가격 경쟁력 이미 크게 훼손. 테슬라가 중국 공급사 의존 탈피 검토 배경.",
+         "robotis":"🟢 직접 수혜: 한국산 DYNAMIXEL·로봇 손은 KORUS FTA로 대미 수출 관세 0%. 가격 경쟁력 역전 구간."},
+        {"layer":"④ 오픈AI RFP·민간 탈중국화","status":"진행 중","sc":"#4EC9B0","icon":"📋",
+         "body":"2026년 1월 오픈AI, 베어링·모터·액추에이터 미국 기반 공급업체 RFP 공개 발송. '선전(深圳) 공급망에서 벗어나고 싶다'는 명확한 신호.",
+         "impact":"민간 시장에서 자발적 탈중국화 가속. 규제 없이도 수요 구조 변화 진행 중.",
+         "robotis":"🟢 직접 수혜: 미국 기반 공급업체 우선 발주 수요에서 한국 ROBOTIS Inc.(미국 법인) 대응 가능."},
+    ]
+
+    c1, c2 = st.columns(2)
+    for i, r in enumerate(reg_layers):
+        col = c1 if i % 2 == 0 else c2
+        with col:
+            st.markdown(f"""
+            <div style="background:#0A0A0C;border-radius:8px;padding:14px;border:1px solid {r['sc']}33;margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;">
+                <div style="font-size:14px;font-weight:700;color:#C0BDB4;">{r['icon']} {r['layer']}</div>
+                <div style="flex-shrink:0;background:{r['sc']}22;color:{r['sc']};font-size:20px;
+                            padding:2px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-weight:700;">{r['status']}</div>
+              </div>
+              <div style="font-size:22px;color:#777;line-height:1.7;margin-bottom:8px;">{r['body']}</div>
+              <div style="font-size:22px;color:#888;line-height:1.6;margin-bottom:6px;padding-left:8px;border-left:2px solid #333;">
+                <span style="color:#aaa;">임팩트: </span>{r['impact']}
+              </div>
+              <div style="font-size:22px;color:#4EC9B0;background:#0F1F1888;border-radius:6px;padding:6px 10px;line-height:1.6;">{r['robotis']}</div>
+            </div>""", unsafe_allow_html=True)
+
+    # 유불리 요약
+    fa_col, fb_col = st.columns(2)
+    with fa_col:
+        st.markdown('<div style="background:#0F1F18;border:1px solid #4EC9B033;border-radius:8px;padding:12px 14px;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px;color:#4EC9B0;font-weight:700;margin-bottom:8px;">✅ 로보티즈에 유리한 팩트</div>', unsafe_allow_html=True)
+        for f in ["KORUS FTA → 대미 수출 관세 0% (중국산 25~145% 대비 압도적 우위)",
+                  "Section 232 결과 발표 시 한국 등 우방국 예외 적용 가능성 高",
+                  "유니트리 등 중국 주요 업체, 인민해방군 연계로 연방 조달 원천 차단",
+                  "미국 법인 ROBOTIS Inc. 보유 → '미국 기반 공급업체' 자격 충족",
+                  "오픈AI RFP가 명시적으로 미국·동맹국 공급망 우선 요청"]:
+            st.markdown(f'<div style="font-size:22px;color:#888;display:flex;gap:8px;margin-bottom:4px;"><span style="color:#4EC9B0;">•</span>{f}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    with fb_col:
+        st.markdown('<div style="background:#1F0F0F;border:1px solid #FF8C6933;border-radius:8px;padding:12px 14px;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px;color:#FF8C69;font-weight:700;margin-bottom:8px;">⚠️ 주의해야 할 팩트</div>', unsafe_allow_html=True)
+        for f in ["Section 232 조사 결과는 2026년 5~6월 이후 — 아직 확정 관세 없음",
+                  "중국 공급업체들이 미국 내 합작공장 건설로 규제 우회 적극 추진 중",
+                  "테슬라는 현재도 중국산 산화 액추에이터 발주 지속 (규제 시행 전)",
+                  "민간 판매 직접 규제는 아직 없음 — 연방 조달 제한만 법제화 시도",
+                  "관세 부과 시 테슬라·Figure AI 등의 원가 압박으로 로봇 수요 위축 가능성"]:
+            st.markdown(f'<div style="font-size:22px;color:#888;display:flex;gap:8px;margin-bottom:4px;"><span style="color:#FF8C69;">•</span>{f}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
 def slide_roadmap():
     st.markdown(sec_lbl("🗓️","제품 로드맵 타임라인"), unsafe_allow_html=True)
     rm_html = '<div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;">'
@@ -1334,6 +1579,9 @@ SLIDE_RENDERERS = {
     "TAM & 채택률":         slide_tam,
     "수혜 4단계 로드맵":     slide_pacemaker,
     "유상증자 자금계획":     slide_capex,
+    "QDD & 우즈벡 거점":    slide_qdd,
+    "테슬라 공급 시나리오":  slide_tesla,
+    "미국 관세 규제":        slide_tariff,
     "제품 로드맵":           slide_roadmap,
     "파이프라인 현황":       slide_pipeline,
     "중국 경쟁사 위협":      slide_china_rivals,
