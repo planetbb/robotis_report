@@ -616,10 +616,10 @@ def slide_protocol_moat():
                 border-radius:10px;padding:14px 20px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;">
       <span style="font-size:26px;flex-shrink:0;">⚙️</span>
       <div>
-        <div style="font-size:16px;font-weight:700;color:#E8C547;margin-bottom:6px;">
+        <div style="font-size:24px;font-weight:700;color:#E8C547;margin-bottom:6px;">
           로보티즈 = 부품사가 아닌 <span style="color:#4EC9B0;">프로토콜 오너</span>
         </div>
-        <div style="font-size:13px;color:#999;line-height:1.8;">
+        <div style="font-size:22px;color:#999;line-height:1.8;">
           일반 부품 OEM은 스펙을 납품하지만, 로보티즈는 <b style="color:#E0DDD5;">다중 액추에이터 제어 프로토콜(DYNAMIXEL Protocol 1.0/2.0)을 25년간 독자 빌드업</b>해왔습니다.
           C·C++·Python·MATLAB·LabVIEW·ROS2 전 레이어를 커버하는 SDK, 100여 종 모델 간 완전 상호호환,
           전 세계 1,000+ 연구기관에 쌓인 <b style="color:#4EC9B0;">실전 B2B 협업 레퍼런스</b> —
@@ -648,18 +648,18 @@ def slide_protocol_moat():
         with col:
             st.markdown(f"""
             <div style="background:#0A0A0C;border-radius:10px;padding:14px 16px;border:1px solid {d['color']}33;height:100%;">
-              <div style="font-size:14px;font-weight:700;color:{d['color']};margin-bottom:12px;">{d['icon']} {d['title']}</div>
+              <div style="font-size:22px;font-weight:700;color:{d['color']};margin-bottom:12px;">{d['icon']} {d['title']}</div>
               <div style="margin-bottom:10px;">
-                <div style="font-size:11px;color:#FF8C69;font-weight:600;margin-bottom:4px;">일반 부품사</div>
-                <div style="font-size:12px;color:#666;line-height:1.6;">{d['generic']}</div>
+                <div style="font-size:20px;color:#FF8C69;font-weight:600;margin-bottom:4px;">일반 부품사</div>
+                <div style="font-size:20px;color:#666;line-height:1.6;">{d['generic']}</div>
               </div>
               <div style="margin-bottom:10px;">
-                <div style="font-size:11px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">로보티즈</div>
-                <div style="font-size:12px;color:#999;line-height:1.6;">{d['robotis']}</div>
+                <div style="font-size:20px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">로보티즈</div>
+                <div style="font-size:20px;color:#999;line-height:1.6;">{d['robotis']}</div>
               </div>
               <div style="background:{d['color']}11;border:1px solid {d['color']}33;border-radius:6px;padding:8px 10px;">
-                <div style="font-size:11px;color:{d['color']};font-weight:600;margin-bottom:3px;">해자(Moat)</div>
-                <div style="font-size:12px;color:#888;line-height:1.6;">{d['moat']}</div>
+                <div style="font-size:20px;color:{d['color']};font-weight:600;margin-bottom:3px;">해자(Moat)</div>
+                <div style="font-size:20px;color:#888;line-height:1.6;">{d['moat']}</div>
               </div>
             </div>""", unsafe_allow_html=True)
 
@@ -676,15 +676,15 @@ def slide_sdk_reference():
             {"layer":"하드웨어 인터페이스","items":["U2D2","USB2DYNAMIXEL","DYNAMIXEL Shield (Arduino)"],"color":"#FF8C69"},
         ]
         for l in sdk_layers:
-            badges = "".join(f'<span style="font-size:12px;background:{l["color"]}18;color:{l["color"]};border-radius:4px;padding:2px 8px;margin:2px 2px 2px 0;display:inline-block;">{it}</span>' for it in l["items"])
+            badges = "".join(f'<span style="font-size:20px;background:{l["color"]}18;color:{l["color"]};border-radius:4px;padding:2px 8px;margin:2px 2px 2px 0;display:inline-block;">{it}</span>' for it in l["items"])
             st.markdown(f"""
             <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;">
-              <div style="flex-shrink:0;width:110px;font-size:12px;color:{l['color']};font-weight:600;padding-top:3px;">{l['layer']}</div>
+              <div style="flex-shrink:0;width:110px;font-size:20px;color:{l['color']};font-weight:600;padding-top:3px;">{l['layer']}</div>
               <div style="flex:1;">{badges}</div>
             </div>""", unsafe_allow_html=True)
         st.markdown("""
         <div style="margin-top:12px;background:#0F1218;border:1px solid #1E2A1E;border-radius:8px;padding:10px 14px;
-                    font-size:12px;color:#555;line-height:1.7;">
+                    font-size:20px;color:#555;line-height:1.7;">
           💡 피지컬 AI 시뮬레이터(Isaac Lab·MuJoCo)에서 학습한 정책이
           <b style="color:#E0DDD5;">그대로 DYNAMIXEL 하드웨어에서 실행</b>됩니다.
           Sim-to-Real 갭이 가장 좁은 액추에이터.
@@ -711,17 +711,17 @@ def slide_sdk_reference():
             ]},
         ]
         for g in ref_groups:
-            st.markdown(f'<div style="font-size:12px;color:{g["color"]};font-weight:700;margin:10px 0 6px;">{g["cat"]}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="font-size:20px;color:{g["color"]};font-weight:700;margin:10px 0 6px;">{g["cat"]}</div>', unsafe_allow_html=True)
             for r in g["refs"]:
                 st.markdown(f"""
                 <div style="display:flex;gap:10px;margin-bottom:6px;padding-left:10px;border-left:2px solid {g['color']}44;">
-                  <span style="font-size:12px;color:#C0BDB4;font-weight:500;flex-shrink:0;min-width:110px;">{r['name']}</span>
-                  <span style="font-size:12px;color:#666;line-height:1.6;">{r['detail']}</span>
+                  <span style="font-size:20px;color:#C0BDB4;font-weight:500;flex-shrink:0;min-width:110px;">{r['name']}</span>
+                  <span style="font-size:20px;color:#666;line-height:1.6;">{r['detail']}</span>
                 </div>""", unsafe_allow_html=True)
 
 def slide_modular_vs_vertical():
     """모듈형 vs 수직계열화 구도"""
-    st.markdown('<div style="font-size:14px;color:#888;font-weight:600;margin-bottom:12px;">📊 프로토콜 오너의 시장 구도 — 모듈형 vs 수직계열화 채택률</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:22px;color:#888;font-weight:600;margin-bottom:12px;">📊 프로토콜 오너의 시장 구도 — 모듈형 vs 수직계열화 채택률</div>', unsafe_allow_html=True)
 
     approach_data = [
         {"type":"모듈형 (Open Ecosystem)","champion":"ROBOTIS DYNAMIXEL","color":"#E8C547","share25":22,
@@ -737,19 +737,19 @@ def slide_modular_vs_vertical():
     cols = st.columns(2)
     for col, a in zip(cols, approach_data):
         with col:
-            users_html = "".join(f'<span style="font-size:12px;background:#E8C54718;color:#E8C547;border-radius:4px;padding:2px 8px;margin:2px 2px 0 0;display:inline-block;">{u}</span>' for u in a["users"])
-            pros_html  = "".join(f'<div style="font-size:13px;color:#888;line-height:1.65;display:flex;gap:6px;margin-bottom:3px;"><span style="color:#4EC9B0;">+</span>{p}</div>' for p in a["pros"])
-            cons_html  = "".join(f'<div style="font-size:13px;color:#888;line-height:1.65;display:flex;gap:6px;margin-bottom:3px;"><span style="color:#FF8C69;">−</span>{c}</div>' for c in a["cons"])
+            users_html = "".join(f'<span style="font-size:20px;background:#E8C54718;color:#E8C547;border-radius:4px;padding:2px 8px;margin:2px 2px 0 0;display:inline-block;">{u}</span>' for u in a["users"])
+            pros_html  = "".join(f'<div style="font-size:22px;color:#888;line-height:1.65;display:flex;gap:6px;margin-bottom:3px;"><span style="color:#4EC9B0;">+</span>{p}</div>' for p in a["pros"])
+            cons_html  = "".join(f'<div style="font-size:22px;color:#888;line-height:1.65;display:flex;gap:6px;margin-bottom:3px;"><span style="color:#FF8C69;">−</span>{c}</div>' for c in a["cons"])
             st.markdown(f"""
             <div style="background:#18181E;border:1px solid {a['color']}33;border-top:3px solid {a['color']};
                         border-radius:10px;padding:16px 18px;">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
                 <div>
-                  <div style="font-size:16px;font-weight:700;color:{a['color']};margin-bottom:4px;">{a['type']}</div>
-                  <div style="font-size:13px;color:#666;">{a['champion']}</div>
+                  <div style="font-size:24px;font-weight:700;color:{a['color']};margin-bottom:4px;">{a['type']}</div>
+                  <div style="font-size:22px;color:#666;">{a['champion']}</div>
                 </div>
                 <div style="text-align:right;">
-                  <div style="font-size:11px;color:#555;margin-bottom:2px;">현재 점유(추정)</div>
+                  <div style="font-size:20px;color:#555;margin-bottom:2px;">현재 점유(추정)</div>
                   <div style="font-size:22px;font-weight:700;color:{a['color']};font-family:'IBM Plex Mono',monospace;">{a['share25']}%</div>
                 </div>
               </div>
@@ -757,15 +757,15 @@ def slide_modular_vs_vertical():
                 <div style="width:{a['share25']}%;height:100%;background:{a['color']};border-radius:6px;"></div>
               </div>
               <div style="margin-bottom:10px;">
-                <div style="font-size:12px;color:#4EC9B0;font-weight:600;margin-bottom:6px;">장점</div>
+                <div style="font-size:20px;color:#4EC9B0;font-weight:600;margin-bottom:6px;">장점</div>
                 {pros_html}
               </div>
               <div style="margin-bottom:12px;">
-                <div style="font-size:12px;color:#FF8C69;font-weight:600;margin-bottom:6px;">한계</div>
+                <div style="font-size:20px;color:#FF8C69;font-weight:600;margin-bottom:6px;">한계</div>
                 {cons_html}
               </div>
               <div style="background:{a['color']}0D;border-radius:6px;padding:10px 12px;">
-                <div style="font-size:12px;color:{a['color']};font-weight:600;margin-bottom:6px;">주요 채택 고객</div>
+                <div style="font-size:20px;color:{a['color']};font-weight:600;margin-bottom:6px;">주요 채택 고객</div>
                 <div>{users_html}</div>
               </div>
             </div>""", unsafe_allow_html=True)
@@ -774,7 +774,7 @@ def slide_modular_vs_vertical():
     st.markdown("<div style='height:12px'/>", unsafe_allow_html=True)
     st.markdown("""
     <div style="background:#0F1020;border:1px solid #7B9FFF33;border-radius:8px;padding:12px 18px;
-                font-size:13px;color:#7B9FFF;line-height:1.8;">
+                font-size:22px;color:#7B9FFF;line-height:1.8;">
       💡 <b>2025~2027년은 모듈형 채택 피크 구간</b>. 이 창이 열려 있는 동안 로보티즈가 연구 표준에서 상업 표준으로
       전환을 얼마나 빠르게 완성하느냐가 2030년 이후의 포지션을 결정합니다.
       로봇 손·AI 워커의 Lock-in 성공 여부가 PSR 87배 정당화의 최종 판단 기준.
@@ -795,7 +795,7 @@ def slide_tam():
         fig.update_layout(margin=dict(l=40, r=10, t=10, b=50))
         st.plotly_chart(fig, use_container_width=True)
         st.markdown("""
-        <div style="font-size:12px;color:#444;line-height:1.7;margin-top:4px;">
+        <div style="font-size:20px;color:#444;line-height:1.7;margin-top:4px;">
           * 글로벌 시장 성장에도 채택률(%)은 수직계열화로 점진 하락 —<br>
           TAM 절대값은 성장하나 <b style="color:#E8C547;">점유율 방어</b>가 핵심 변수
         </div>""", unsafe_allow_html=True)
@@ -815,7 +815,7 @@ def slide_tam():
         fig2.update_layout(margin=dict(l=40, r=10, t=10, b=50))
         st.plotly_chart(fig2, use_container_width=True)
         st.markdown("""
-        <div style="font-size:12px;color:#444;line-height:1.7;margin-top:4px;">
+        <div style="font-size:20px;color:#444;line-height:1.7;margin-top:4px;">
           * 연구용 비중 감소 + 상업화 비중 확대 —<br>
           <b style="color:#4EC9B0;">초기상업화 구간(2025~2028)</b>이 로보티즈 모듈형 수요 피크
         </div>""", unsafe_allow_html=True)
@@ -848,20 +848,20 @@ def slide_pacemaker():
                     padding:12px 16px;background:#0D0D10;border-radius:8px;
                     border-left:3px solid {pm['color']};margin-bottom:8px;">
           <div>
-            <div style="font-size:12px;background:{pm['color']}22;color:{pm['color']};border-radius:4px;
+            <div style="font-size:20px;background:{pm['color']}22;color:{pm['color']};border-radius:4px;
                         padding:3px 8px;display:inline-block;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;">
               {pm['icon']} {pm['label']}
             </div>
-            <div style="font-size:14px;color:#C0BDB4;font-weight:600;line-height:1.5;">{pm['title']}</div>
+            <div style="font-size:22px;color:#C0BDB4;font-weight:600;line-height:1.5;">{pm['title']}</div>
           </div>
           <div>
-            <div style="font-size:11px;color:#555;font-weight:600;margin-bottom:4px;">시장 구도</div>
-            <div style="font-size:13px;color:#888;line-height:1.7;">{pm['desc']}</div>
+            <div style="font-size:20px;color:#555;font-weight:600;margin-bottom:4px;">시장 구도</div>
+            <div style="font-size:22px;color:#888;line-height:1.7;">{pm['desc']}</div>
           </div>
           <div>
-            <div style="font-size:11px;color:{pm['color']};font-weight:600;margin-bottom:4px;">로보티즈 전략 포인트</div>
-            <div style="font-size:13px;color:#888;line-height:1.7;margin-bottom:6px;">{pm['robotis']}</div>
-            <div style="font-size:11px;color:#444;font-family:'IBM Plex Mono',monospace;">📌 KPI: {pm['kpi']}</div>
+            <div style="font-size:20px;color:{pm['color']};font-weight:600;margin-bottom:4px;">로보티즈 전략 포인트</div>
+            <div style="font-size:22px;color:#888;line-height:1.7;margin-bottom:6px;">{pm['robotis']}</div>
+            <div style="font-size:20px;color:#444;font-family:'IBM Plex Mono',monospace;">📌 KPI: {pm['kpi']}</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
@@ -887,10 +887,10 @@ def slide_pacemaker():
     mcols = st.columns(3)
     for col, g in zip(mcols, monitor_groups):
         with col:
-            items_html = "".join(f'<div style="display:flex;gap:7px;margin-bottom:7px;font-size:12px;color:#777;line-height:1.6;"><span style="color:{g["color"]};flex-shrink:0;">•</span>{it}</div>' for it in g["items"])
+            items_html = "".join(f'<div style="display:flex;gap:7px;margin-bottom:7px;font-size:20px;color:#777;line-height:1.6;"><span style="color:{g["color"]};flex-shrink:0;">•</span>{it}</div>' for it in g["items"])
             st.markdown(f"""
             <div style="background:#0A0A0C;border-radius:8px;padding:12px 14px;border:1px solid {g['color']}33;">
-              <div style="font-size:13px;color:{g['color']};font-weight:700;margin-bottom:10px;">{g['title']}</div>
+              <div style="font-size:22px;color:{g['color']};font-weight:700;margin-bottom:10px;">{g['title']}</div>
               {items_html}
             </div>""", unsafe_allow_html=True)
 
@@ -1016,7 +1016,7 @@ def slide_china_rivals():
                 padding:9px 16px;margin-bottom:10px;
                 display:flex;align-items:center;gap:10px;">
       <span style="font-size:22px;">🚨</span>
-      <div style="font-size:15px;color:#AAA;line-height:1.6;">
+      <div style="font-size:24px;color:#AAA;line-height:1.6;">
         <b style="color:#FF6B6B;">중국발 가격 파괴 위협</b> — 2025년 글로벌 출하 1.6만대 중
         <span style="color:#FF8C69;font-weight:600;">중국산 80%+</span> 점유.
         유니트리 R1 <span style="color:#FF8C69;font-weight:600;">$5,900</span> — 미국 경쟁사의 ⅛ 수준.
@@ -1031,31 +1031,31 @@ def slide_china_rivals():
                     display:grid;grid-template-columns:160px 1fr 1fr 1fr;gap:14px;align-items:start;">
           <!-- 기업 정보 -->
           <div>
-            <div style="font-size:16px;font-weight:700;color:#E0DDD5;margin-bottom:2px;">{r['country']} {r['name']}</div>
-            <div style="font-size:13px;color:#555;margin-bottom:5px;">{r['city']}</div>
-            <div style="display:inline-block;background:{r['tc']}22;color:{r['tc']};font-size:12px;
+            <div style="font-size:24px;font-weight:700;color:#E0DDD5;margin-bottom:2px;">{r['country']} {r['name']}</div>
+            <div style="font-size:22px;color:#555;margin-bottom:5px;">{r['city']}</div>
+            <div style="display:inline-block;background:{r['tc']}22;color:{r['tc']};font-size:20px;
                         padding:2px 7px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:5px;">
               위협도 {r['threat']}
             </div><br>
-            <span style="font-size:13px;color:#777;">{r['product']}</span><br>
-            <span style="font-size:14px;color:#E8C547;font-family:'IBM Plex Mono',monospace;font-weight:600;">{r['price']}</span>
+            <span style="font-size:22px;color:#777;">{r['product']}</span><br>
+            <span style="font-size:22px;color:#E8C547;font-family:'IBM Plex Mono',monospace;font-weight:600;">{r['price']}</span>
           </div>
           <!-- 출하 -->
           <div>
-            <div style="font-size:12px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">📦 출하 현황</div>
-            <div style="font-size:13px;color:#888;line-height:1.55;">{r['shipment']}</div>
+            <div style="font-size:20px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">📦 출하 현황</div>
+            <div style="font-size:22px;color:#888;line-height:1.55;">{r['shipment']}</div>
           </div>
           <!-- 강점 -->
           <div>
-            <div style="font-size:12px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">✅ 강점</div>
-            <div style="font-size:13px;color:#888;line-height:1.55;">{r['strength']}</div>
+            <div style="font-size:20px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">✅ 강점</div>
+            <div style="font-size:22px;color:#888;line-height:1.55;">{r['strength']}</div>
           </div>
           <!-- 약점·충돌 -->
           <div>
-            <div style="font-size:12px;color:#FF8C69;font-weight:600;margin-bottom:4px;">⚠️ 약점</div>
-            <div style="font-size:13px;color:#888;line-height:1.55;margin-bottom:6px;">{r['weakness']}</div>
-            <div style="font-size:12px;color:{r['tc']};font-weight:600;margin-bottom:4px;">🎯 충돌 영역</div>
-            <div style="font-size:13px;color:#888;line-height:1.55;">{r['overlap']}</div>
+            <div style="font-size:20px;color:#FF8C69;font-weight:600;margin-bottom:4px;">⚠️ 약점</div>
+            <div style="font-size:22px;color:#888;line-height:1.55;margin-bottom:6px;">{r['weakness']}</div>
+            <div style="font-size:20px;color:{r['tc']};font-weight:600;margin-bottom:4px;">🎯 충돌 영역</div>
+            <div style="font-size:22px;color:#888;line-height:1.55;">{r['overlap']}</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
@@ -1094,11 +1094,11 @@ def slide_radar_diff():
             st.markdown(f"""
             <div style="margin-bottom:14px;padding:12px 14px;background:#18181E;
                         border:1px solid #22222A;border-left:3px solid {d['color']};border-radius:8px;">
-              <div style="font-size:15px;color:{d['color']};font-weight:700;margin-bottom:7px;">{d['title']}</div>
-              <div style="font-size:13px;color:#777;line-height:1.7;">
+              <div style="font-size:24px;color:{d['color']};font-weight:700;margin-bottom:7px;">{d['title']}</div>
+              <div style="font-size:22px;color:#777;line-height:1.7;">
                 <span style="color:#4EC9B0;font-weight:600;">✅ 우위</span>&nbsp; {d['win']}
               </div>
-              <div style="font-size:13px;color:#777;line-height:1.7;margin-top:4px;">
+              <div style="font-size:22px;color:#777;line-height:1.7;margin-top:4px;">
                 <span style="color:#FF8C69;font-weight:600;">⚠️ 열위</span>&nbsp; {d['lose']}
               </div>
             </div>""", unsafe_allow_html=True)
@@ -1115,21 +1115,21 @@ def slide_krobot():
             st.markdown(f"""
             <div style="background:#0D0D12;border-radius:10px;padding:14px 12px;
                         border:1px solid {c['color']}33;border-top:3px solid {c['color']};">
-              <div style="font-size:18px;font-weight:700;color:{c['color']};margin-bottom:10px;">{c['name']}</div>
+              <div style="font-size:27px;font-weight:700;color:{c['color']};margin-bottom:10px;">{c['name']}</div>
               <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
-                <span style="font-size:13px;color:#555;">시총</span>
-                <span style="font-size:13px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['cap']}조</span>
+                <span style="font-size:22px;color:#555;">시총</span>
+                <span style="font-size:22px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['cap']}조</span>
               </div>
               <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
-                <span style="font-size:13px;color:#555;">매출(E)</span>
-                <span style="font-size:13px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['rev25']}억</span>
+                <span style="font-size:22px;color:#555;">매출(E)</span>
+                <span style="font-size:22px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['rev25']}억</span>
               </div>
               <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
-                <span style="font-size:13px;color:#555;">영업이익(E)</span>
-                <span style="font-size:13px;color:{oc};font-family:'IBM Plex Mono',monospace;font-weight:600;">{os}</span>
+                <span style="font-size:22px;color:#555;">영업이익(E)</span>
+                <span style="font-size:22px;color:{oc};font-family:'IBM Plex Mono',monospace;font-weight:600;">{os}</span>
               </div>
               <div style="margin-top:8px;background:{c['color']}15;color:{c['color']};border-radius:4px;
-                          padding:3px 6px;text-align:center;font-size:12px;">{c['backer']}</div>
+                          padding:3px 6px;text-align:center;font-size:20px;">{c['backer']}</div>
             </div>""", unsafe_allow_html=True)
 
     st.markdown("<div style='height:12px'/>", unsafe_allow_html=True)
