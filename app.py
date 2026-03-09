@@ -410,7 +410,7 @@ with st.sidebar:
     st.markdown("<div style='height:20px'/>", unsafe_allow_html=True)
     st.markdown("""
     <div style="font-size:11px;color:#333;line-height:1.6;padding:0 4px;">
-      ⚠️ 본 자료는 투자 참고 목적이며 Claude는 금융 전문가가 아닙니다. 투자의 최종 책임은 투자자 본인에게 있습니다.
+      ⚠️ 본 자료는 투자 참고 목적이며 투자의 최종 책임은 투자자 본인에게 있습니다.
     </div>
     """, unsafe_allow_html=True)
 
