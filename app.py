@@ -603,7 +603,7 @@ def slide_portfolio():
         textfont_size=11,
     ))
     fig.update_layout(**DT, height=200, showlegend=True,
-                      legend=dict(orientation="h",y=-0.15,font=dict(size=10)),
+                      legend=dict(orientation="h",y=-0.15),
                       annotations=[dict(text="매출구성<br>2024년", showarrow=False, font=dict(size=11,color="#888"))])
     st.plotly_chart(fig, use_container_width=True)
 
@@ -1073,8 +1073,8 @@ def slide_radar_diff():
                           polar=dict(bgcolor="#18181E",
                                      radialaxis=dict(visible=True, range=[0,100], color="#333", tickfont=dict(size=10)),
                                      angularaxis=dict(color="#555", tickfont=dict(size=11))),
-                          legend=dict(orientation="h", y=-0.12, font=dict(size=12)),
-                          margin=dict(l=20, r=20, t=20, b=40))
+                          legend=dict(orientation="h", y=-0.12))
+        fig.update_layout(margin=dict(l=20, r=20, t=20, b=40))
         st.plotly_chart(fig, use_container_width=True)
 
     with c2:
@@ -1149,8 +1149,8 @@ def slide_krobot():
     fig.update_layout(**DT, height=230,
                       xaxis=dict(title="매출액(억원)", color="#555", title_font=dict(size=12)),
                       yaxis=dict(title="시가총액(조원)", color="#555", title_font=dict(size=12)),
-                      showlegend=False,
-                      margin=dict(l=40, r=10, t=10, b=40))
+                      showlegend=False)
+    fig.update_layout(margin=dict(l=40, r=10, t=10, b=40))
     st.plotly_chart(fig, use_container_width=True)
 
 # ─── 실적 추이 ────────────────────────────────────────
@@ -1295,13 +1295,13 @@ def slide_opinion():
     # 시나리오 3종
     st.markdown("<div style='height:10px'/>", unsafe_allow_html=True)
     scenarios = [
-        {"label":"Best Case 🚀","prob":"15%","color":"#4EC9B0",
+        {"label":"베스트 케이스 🚀","prob":"15%","color":"#4EC9B0",
          "title":"다이나믹셀 Y / 로봇 손 테슬라 옵티머스 공급 확정",
          "impact":"연간 수천억 B2B 계약. PSR 리레이팅 완전 정당화. 주가 재급등 트리거."},
-        {"label":"Base Case 🔬","prob":"45%","color":"#E8C547",
+        {"label":"베이스 케이스 🔬","prob":"45%","color":"#E8C547",
          "title":"R&D·소량 납품 → 공급사 등록 검증 단계",
          "impact":"직접 매출 미미하나 공급사 등록 자체가 모멘텀. 2027년 이후 확대 기대감 유지."},
-        {"label":"Worst Case ❌","prob":"40%","color":"#FF8C69",
+        {"label":"베어 케이스 ❌","prob":"40%","color":"#FF8C69",
          "title":"테슬라 완전 내재화 — 공급 불발",
          "impact":"옵티머스 카탈리스트 소멸. PSR 87배 정당화 근거 약화. 주가 조정 압력."},
     ]
