@@ -789,9 +789,10 @@ def slide_tam():
                         line=dict(color="#7B9FFF", width=2), marker=dict(size=6))
         fig.add_scatter(x=tam_data["year"], y=tam_data["tam"], name="로보티즈 TAM($B)",
                         line=dict(color="#E8C547", width=2), marker=dict(size=6))
-        fig.update_layout(**DT, height=240, yaxis=dict(title="십억달러($B)", color="#555"),
-                          legend=dict(orientation="h", y=-0.25),
-                          margin=dict(l=40, r=10, t=10, b=50))
+        fig.update_layout(**DT, height=240,
+                          yaxis=dict(title="십억달러($B)", color="#555"),
+                          legend=dict(orientation="h", y=-0.25))
+        fig.update_layout(margin=dict(l=40, r=10, t=10, b=50))
         st.plotly_chart(fig, use_container_width=True)
         st.markdown("""
         <div style="font-size:12px;color:#444;line-height:1.7;margin-top:4px;">
@@ -810,8 +811,8 @@ def slide_tam():
                      name="대량양산", marker_color="#7B9FFF", opacity=0.85)
         fig2.update_layout(**DT, height=240, barmode="stack",
                            yaxis=dict(title="비중 (%)", color="#555"),
-                           legend=dict(orientation="h", y=-0.25),
-                           margin=dict(l=40, r=10, t=10, b=50))
+                           legend=dict(orientation="h", y=-0.25))
+        fig2.update_layout(margin=dict(l=40, r=10, t=10, b=50))
         st.plotly_chart(fig2, use_container_width=True)
         st.markdown("""
         <div style="font-size:12px;color:#444;line-height:1.7;margin-top:4px;">
