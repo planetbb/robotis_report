@@ -21,6 +21,14 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
+/* ── Streamlit 상단 툴바·헤더 완전 숨김 ── */
+header[data-testid="stHeader"] { display: none !important; }
+#MainMenu { display: none !important; }
+footer { display: none !important; }
+[data-testid="stToolbar"] { display: none !important; }
+[data-testid="stDecoration"] { display: none !important; }
+[data-testid="stStatusWidget"] { display: none !important; }
+
 html, body, [class*="css"] {
     font-family: 'Noto Sans KR', sans-serif;
     background: #0A0A0C;
@@ -29,13 +37,13 @@ html, body, [class*="css"] {
 .stApp { background: #0A0A0C; }
 
 .block-container {
-    padding-top: 0.4rem !important;
-    padding-bottom: 0.4rem !important;
-    padding-left: 0.6rem !important;
-    padding-right: 0.6rem !important;
+    padding-top: 0.3rem !important;
+    padding-bottom: 0.3rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
     max-width: 100% !important;
 }
-div[data-testid="stHorizontalBlock"] { gap: 4px; }
+div[data-testid="stHorizontalBlock"] { gap: 0px; }
 
 /* ── 사이드바 ── */
 section[data-testid="stSidebar"] {
@@ -133,32 +141,44 @@ section.main .stButton > button,
     box-shadow: 0 0 0 1px #1E1E28;
 }
 
-/* 네비 버튼 wrapper ─ 이 클래스를 직접 붙임 */
-.nav-wrap button {
-    background: #18181E !important;
-    border: 2px solid #2A2A35 !important;
-    border-radius: 50% !important;
-    color: #888 !important;
-    font-size: 30px !important;
+/* ── 네비 버튼: 세로로 꽉 찬 tall 버튼 ── */
+.nav-wrap {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
+}
+.nav-wrap .stButton {
+    display: flex;
+    flex: 1;
+    height: 100%;
+}
+.nav-wrap .stButton > button {
+    background: #14141A !important;
+    border: 1px solid #1E1E28 !important;
+    border-radius: 10px !important;
+    color: #555 !important;
+    font-size: 26px !important;
     font-weight: 300 !important;
     line-height: 1 !important;
-    width: 56px !important;
-    height: 56px !important;
-    min-height: 56px !important;
-    max-width: 56px !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 500px !important;
     padding: 0 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,.4) !important;
+    box-shadow: none !important;
     transition: all .2s !important;
     cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
-.nav-wrap button:hover {
+.nav-wrap .stButton > button:hover {
+    background: #1A1A24 !important;
     border-color: #E8C547 !important;
     color: #E8C547 !important;
-    background: #1A1A24 !important;
-    box-shadow: 0 0 12px rgba(232,197,71,.2) !important;
+    box-shadow: inset 0 0 20px rgba(232,197,71,.06) !important;
 }
-.nav-wrap button:disabled {
-    opacity: 0.1 !important;
+.nav-wrap .stButton > button:disabled {
+    opacity: 0.15 !important;
     cursor: not-allowed !important;
 }
 
@@ -1098,10 +1118,8 @@ _footer = f"""
 _col_prev, _col_main, _col_next = st.columns([1, 26, 1])
 
 with _col_prev:
-    # 버튼을 세로 중앙에 오도록 spacer
-    st.markdown('<div style="height:36vh;min-height:180px;"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="nav-wrap">', unsafe_allow_html=True)
-    if st.button("‹", key="prev_btn", disabled=(si == 0)):
+    st.markdown('<div class="nav-wrap" style="height:100%;min-height:500px;">', unsafe_allow_html=True)
+    if st.button("‹", key="prev_btn", disabled=(si == 0), use_container_width=True):
         st.session_state.slide_idx -= 1
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
@@ -1112,9 +1130,8 @@ with _col_main:
     st.markdown(_footer, unsafe_allow_html=True)
 
 with _col_next:
-    st.markdown('<div style="height:36vh;min-height:180px;"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="nav-wrap">', unsafe_allow_html=True)
-    if st.button("›", key="next_btn", disabled=(si == n_slides - 1)):
+    st.markdown('<div class="nav-wrap" style="height:100%;min-height:500px;">', unsafe_allow_html=True)
+    if st.button("›", key="next_btn", disabled=(si == n_slides - 1), use_container_width=True):
         st.session_state.slide_idx += 1
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
