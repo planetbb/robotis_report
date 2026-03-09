@@ -230,7 +230,7 @@ checkpoints = [
     {"icon":"📌","label":"물적분할 후 지배구조 안정화","note":"2025년 자율주행 사업부 분할 완료. 주주가치 영향 모니터링"},
 ]
 risks = [
-    "매출의 98% 다이나믹셀 단일 의존 → 집중 리스크 여전히 상존",
+    "매출의 98.47%(2024년 기준) 액추에이터 단일 의존 → 집중 리스크 여전히 상존",
     "모터 외부 조달 의존 → 공급망 병목 리스크",
     "시총 3.67조 vs 매출 420억 → PSR 87x 극단적 프리미엄",
     "자율주행로봇 규제·현장 배치 지연 가능성",
@@ -352,7 +352,7 @@ def op_color(val, faded=False):
 SECTIONS = {
     "✅ 체크포인트":   ["KPI 요약", "체크포인트 & 리스크", "주가 이벤트"],
     "🏢 기업 개요":    ["기업 정보 & 주주", "제품 포트폴리오"],
-    "📡 마켓 포지셔닝":["TAM & 채택률", "수혜 4단계 로드맵"],
+    "📡 마켓 포지셔닝":["프로토콜 오너 해자", "SDK & B2B 레퍼런스", "모듈형 vs 수직계열화", "TAM & 채택률", "수혜 4단계 로드맵"],
     "🔧 파이프라인":   ["유상증자 자금계획", "제품 로드맵", "파이프라인 현황"],
     "⚔️ 경쟁 분석":    ["중국 경쟁사 위협", "경쟁력 비교 레이더", "K-로봇 재무 비교"],
     "📈 실적 추이":    ["연간 실적 차트", "분기 실적 & 레이더"],
@@ -573,7 +573,7 @@ def slide_company_info():
 def slide_portfolio():
     st.markdown(sec_lbl("🤖","제품 포트폴리오 (2026 기준)"), unsafe_allow_html=True)
     products = [
-        {"icon":"🔩","name":"DYNAMIXEL","sub":"X·P·Y 시리즈","status":"매출 98%","badge":"캐시카우","bc":"#E8C547","desc":"100여종 라인업. 보스턴다이내믹스 납품. 글로벌 표준."},
+        {"icon":"🔩","name":"DYNAMIXEL","sub":"X·P·Y 시리즈","status":"매출 98.47%(2024년)","badge":"캐시카우","bc":"#E8C547","desc":"100여종 라인업. 보스턴다이내믹스 납품. 글로벌 표준. (2024년 매출 98.47% 차지 — 사업보고서 기준)"},
         {"icon":"🦾","name":"AI 워커","sub":"피지컬 AI 세미 휴머노이드","status":"25년 출하 70대","badge":"신성장","bc":"#4EC9B0","desc":"오픈AI 공급 협의. 27년 1,000대 목표."},
         {"icon":"🤲","name":"로봇 손","sub":"5F·20DoF 고정밀","status":"2026 양산","badge":"파이프라인","bc":"#7B9FFF","desc":"팔당 15kg 하중. 글로벌 빅테크 선주문."},
         {"icon":"🚗","name":"GAEMI","sub":"실외 자율주행로봇","status":"RaaS 운영 중","badge":"RaaS","bc":"#FF8C69","desc":"운행안전인증 국내 1호. 배송·순찰 서비스."},
@@ -596,74 +596,304 @@ def slide_portfolio():
     st.markdown("<div style='height:14px'/>", unsafe_allow_html=True)
     # 매출 구성 파이
     fig = go.Figure(go.Pie(
-        labels=["DYNAMIXEL","AI 워커","로봇 손","GAEMI"],
-        values=[98,1.2,0.5,0.3],
+        labels=["액추에이터(DYNAMIXEL·DYD 등)","자율주행로봇(GAEMI)"],
+        values=[98.47,1.53],
         hole=0.6,
-        marker_colors=["#E8C547","#4EC9B0","#7B9FFF","#FF8C69"],
+        marker_colors=["#E8C547","#4EC9B0"],
         textfont_size=11,
     ))
     fig.update_layout(**DT, height=200, showlegend=True,
                       legend=dict(orientation="h",y=-0.15,font=dict(size=10)),
-                      annotations=[dict(text="매출구성<br>2025E", showarrow=False, font=dict(size=11,color="#888"))])
+                      annotations=[dict(text="매출구성<br>2024년", showarrow=False, font=dict(size=11,color="#888"))])
     st.plotly_chart(fig, use_container_width=True)
 
 # ─── 마켓 포지셔닝 ────────────────────────────────────
-def slide_tam():
-    c1, c2 = st.columns(2)
-    with c1:
-        fig = go.Figure()
-        fig.add_bar(x=tam_data["year"], y=tam_data["market"], name="글로벌 시장(조원)", marker_color="rgba(123,159,255,0.27)")
-        fig.add_bar(x=tam_data["year"], y=tam_data["tam"], name="로보티즈 TAM(조원)", marker_color="#E8C547")
-        fig.update_layout(**DT, title="글로벌 휴머노이드 시장 vs 로보티즈 TAM (조원)", barmode="overlay",
-                          height=280, legend=dict(orientation="h",y=-0.25))
-        st.plotly_chart(fig, use_container_width=True)
-    with c2:
-        fig2 = go.Figure()
-        fig2.add_bar(x=adoption_scenarios["year"], y=adoption_scenarios["연구기관"], name="연구기관", marker_color="#4EC9B0")
-        fig2.add_bar(x=adoption_scenarios["year"], y=adoption_scenarios["초기상업"], name="초기상업화", marker_color="#E8C547")
-        fig2.add_bar(x=adoption_scenarios["year"], y=adoption_scenarios["대량양산"], name="대량양산", marker_color="#FF8C69")
-        fig2.update_layout(**DT, title="모듈형 채택률 시나리오 (%)", barmode="stack",
-                           height=280, legend=dict(orientation="h",y=-0.25))
-        st.plotly_chart(fig2, use_container_width=True)
+def slide_protocol_moat():
+    """프로토콜 오너 해자 분석"""
+    # 핵심 테제 배너
+    st.markdown("""
+    <div style="background:linear-gradient(135deg,#12100A,#0A0D12);border:1px solid #E8C54744;
+                border-radius:10px;padding:14px 20px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;">
+      <span style="font-size:26px;flex-shrink:0;">⚙️</span>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#E8C547;margin-bottom:6px;">
+          로보티즈 = 부품사가 아닌 <span style="color:#4EC9B0;">프로토콜 오너</span>
+        </div>
+        <div style="font-size:13px;color:#999;line-height:1.8;">
+          일반 부품 OEM은 스펙을 납품하지만, 로보티즈는 <b style="color:#E0DDD5;">다중 액추에이터 제어 프로토콜(DYNAMIXEL Protocol 1.0/2.0)을 25년간 독자 빌드업</b>해왔습니다.
+          C·C++·Python·MATLAB·LabVIEW·ROS2 전 레이어를 커버하는 SDK, 100여 종 모델 간 완전 상호호환,
+          전 세계 1,000+ 연구기관에 쌓인 <b style="color:#4EC9B0;">실전 B2B 협업 레퍼런스</b> —
+          <b style="color:#E8C547;">모듈형 채택률이 투자 테제의 핵심 변수</b>인 이유가 여기 있습니다.
+        </div>
+      </div>
+    </div>""", unsafe_allow_html=True)
 
-def slide_pacemaker():
-    st.markdown(sec_lbl("🔄","피지컬 AI 시장 로보티즈 수혜 4단계"), unsafe_allow_html=True)
-    phases = [
-        {"label":"Phase 1","title":"연구 표준 (현재)","color":"#4EC9B0","icon":"🔬",
-         "desc":"글로벌 연구기관 80%+ 다이나믹셀 채택. 피지컬 AI 학습 데이터가 다이나믹셀 환경에서 생성됨.",
-         "robotis":"다이나믹셀 = 피지컬AI 학습의 표준 하드웨어.",
-         "kpi":"글로벌 연구기관 채택 수 / ROS2 DYNAMIXEL 의존도"},
-        {"label":"Phase 2","title":"초기 상업화 (2025~2027)","color":"#E8C547","icon":"🏭",
-         "desc":"연구 프로토타입 → 소량 B2B 납품. 다이나믹셀 기반 설계가 양산 BOM에 탑재.",
-         "robotis":"오픈AI AI 워커, K-휴머노이드 연합. 수직계열화 전환 전 모듈형 수요 피크.",
-         "kpi":"AI 워커 수주 누적 / 로봇 손 빅테크 납품 건수"},
-        {"label":"Phase 3","title":"대량양산 분기점 (2027~2030)","color":"#FF8C69","icon":"⚠️",
-         "desc":"연간 수만대 이상 생산 시 OEM들이 내재화 검토. 모듈형 비중 감소 압력.",
-         "robotis":"핵심 위험 구간. Y 시리즈·로봇 손으로 포지션 유지해야.",
-         "kpi":"DYNAMIXEL Y 시리즈 OEM 채택 비율 / 로봇 손 Lock-in 수"},
-        {"label":"Phase 4","title":"생태계 플랫폼화 (2030+)","color":"#7B9FFF","icon":"🌐",
-         "desc":"다이나믹셀이 로봇 관절의 USB-C처럼 통용 표준이 된 경우 vs. 틈새 프리미엄 축소.",
-         "robotis":"낙관: 피지컬 AI OS + 하드웨어 표준 통합. 비관: 중국 저가에 시장 잠식.",
-         "kpi":"독립 로봇 스타트업 기본 채택 여부 / 표준화 기구 참여"},
+    # 해자 3요소 카드
+    moats = [
+        {"title":"① 프로토콜 IP + 지속 업그레이드","icon":"📡","color":"#E8C547",
+         "generic":"단일 모터 spec 납품. 제어 로직은 고객 자체 개발. 경쟁사가 동일 스펙으로 복제 가능.",
+         "robotis":"DYNAMIXEL Protocol 1.0→2.0을 25년간 독자 개발·진화. 패킷 구조·Control Table·Instruction Set 전체가 로보티즈 IP. DYNAMIXEL 브랜드 자체가 글로벌 등록 상표.",
+         "moat":"프로토콜을 복제해도 25년간 축적된 100여 종 모델 간 호환성·검증 데이터·커뮤니티 레퍼런스는 복제 불가."},
+        {"title":"② 풀스택 SDK 생태계","icon":"🛠️","color":"#4EC9B0",
+         "generic":"데이터시트·드라이버 제공이 전부.",
+         "robotis":"C/C++/Python/C#/Java/MATLAB/LabVIEW + ROS2 공식 패키지. apt-get 한 줄로 설치. GitHub Stars 1,400+. 커뮤니티 생태계 자생적 확장.",
+         "moat":"연구자·개발자가 '처음 배우는 로봇 하드웨어'가 DYNAMIXEL → 경력 전반에 걸친 브랜드 충성도 형성."},
+        {"title":"③ 25년 B2B 레퍼런스","icon":"🤝","color":"#7B9FFF",
+         "generic":"납품 이력 = 스펙 충족 증명.",
+         "robotis":"보스턴다이내믹스(뉴 아틀라스 700개+), 오픈AI(AI 워커·로봇 손 R&D), MIT(피지컬AI 공동개발), DARPA 경진대회, RoboCup 팀 다수.",
+         "moat":"세계 최고 기관과의 공동개발 이력 = 신규 고객의 기술 검증 비용 제로. '보스턴다이내믹스가 쓰는 액추에이터' 한 문장으로 설명 완료."},
     ]
-    cols = st.columns(4)
-    for col, pm in zip(cols, phases):
+    cols = st.columns(3)
+    for col, d in zip(cols, moats):
         with col:
             st.markdown(f"""
-            <div style="background:#18181E;border:1px solid #22222A;border-radius:10px;padding:14px;
-                        border-top:3px solid {pm['color']};height:280px;overflow:hidden;">
-              <div style="font-size:21px;color:{pm['color']};font-family:'IBM Plex Mono',monospace;margin-bottom:5px;">{pm['label']}</div>
-              <div style="font-size:27px;font-weight:700;color:#E0DDD5;margin-bottom:8px;">{pm['icon']} {pm['title']}</div>
-              <div style="font-size:22px;color:#666;line-height:1.55;margin-bottom:8px;">{pm['desc']}</div>
-              <div style="background:{pm['color']}11;border:1px solid {pm['color']}33;border-radius:6px;
-                          padding:7px 9px;font-size:22px;color:#888;line-height:1.5;margin-bottom:6px;">
-                🎯 {pm['robotis']}
+            <div style="background:#0A0A0C;border-radius:10px;padding:14px 16px;border:1px solid {d['color']}33;height:100%;">
+              <div style="font-size:14px;font-weight:700;color:{d['color']};margin-bottom:12px;">{d['icon']} {d['title']}</div>
+              <div style="margin-bottom:10px;">
+                <div style="font-size:11px;color:#FF8C69;font-weight:600;margin-bottom:4px;">일반 부품사</div>
+                <div style="font-size:12px;color:#666;line-height:1.6;">{d['generic']}</div>
               </div>
-              <div style="font-size:21px;color:#444;border-top:1px solid #1A1A1E;padding-top:6px;">
-                📊 {pm['kpi']}
+              <div style="margin-bottom:10px;">
+                <div style="font-size:11px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">로보티즈</div>
+                <div style="font-size:12px;color:#999;line-height:1.6;">{d['robotis']}</div>
+              </div>
+              <div style="background:{d['color']}11;border:1px solid {d['color']}33;border-radius:6px;padding:8px 10px;">
+                <div style="font-size:11px;color:{d['color']};font-weight:600;margin-bottom:3px;">해자(Moat)</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">{d['moat']}</div>
               </div>
             </div>""", unsafe_allow_html=True)
 
+def slide_sdk_reference():
+    """SDK 생태계 & B2B 레퍼런스"""
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown(sec_lbl("🌐","DYNAMIXEL SDK — 지원 레이어 전체 맵"), unsafe_allow_html=True)
+        sdk_layers = [
+            {"layer":"피지컬AI 프레임워크","items":["Isaac Lab","MuJoCo","Genesis","IsaacGym"],"color":"#C084FC"},
+            {"layer":"미들웨어","items":["ROS2 Humble/Jazzy/Rolling","ros2_control","MoveIt2"],"color":"#7B9FFF"},
+            {"layer":"언어 SDK","items":["C/C++","Python 2·3","C#","Java","MATLAB","LabVIEW"],"color":"#4EC9B0"},
+            {"layer":"OS·플랫폼","items":["Linux (ARM·x86)","Windows","macOS","NVIDIA Jetson"],"color":"#E8C547"},
+            {"layer":"하드웨어 인터페이스","items":["U2D2","USB2DYNAMIXEL","DYNAMIXEL Shield (Arduino)"],"color":"#FF8C69"},
+        ]
+        for l in sdk_layers:
+            badges = "".join(f'<span style="font-size:12px;background:{l["color"]}18;color:{l["color"]};border-radius:4px;padding:2px 8px;margin:2px 2px 2px 0;display:inline-block;">{it}</span>' for it in l["items"])
+            st.markdown(f"""
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;">
+              <div style="flex-shrink:0;width:110px;font-size:12px;color:{l['color']};font-weight:600;padding-top:3px;">{l['layer']}</div>
+              <div style="flex:1;">{badges}</div>
+            </div>""", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="margin-top:12px;background:#0F1218;border:1px solid #1E2A1E;border-radius:8px;padding:10px 14px;
+                    font-size:12px;color:#555;line-height:1.7;">
+          💡 피지컬 AI 시뮬레이터(Isaac Lab·MuJoCo)에서 학습한 정책이
+          <b style="color:#E0DDD5;">그대로 DYNAMIXEL 하드웨어에서 실행</b>됩니다.
+          Sim-to-Real 갭이 가장 좁은 액추에이터.
+        </div>""", unsafe_allow_html=True)
+
+    with c2:
+        st.markdown(sec_lbl("🏆","글로벌 B2B 레퍼런스 맵"), unsafe_allow_html=True)
+        ref_groups = [
+            {"cat":"빅테크·AI 랩","color":"#E8C547","refs":[
+                {"name":"오픈AI","detail":"AI 워커·로봇 손 HX5 R&D 납품, 공급 협의 진행"},
+                {"name":"보스턴다이내믹스","detail":"뉴 아틀라스 액추에이터 700개+ 공급 (현재도 지속)"},
+            ]},
+            {"cat":"대학·연구기관","color":"#4EC9B0","refs":[
+                {"name":"MIT (CSAIL)","detail":"피지컬 AI 리더-팔로워 모방학습 공동개발"},
+                {"name":"전 세계 1,000+ 연구기관","detail":"글로벌 로봇 연구·교육 플랫폼 80%+ 채택"},
+            ]},
+            {"cat":"국내 전략 파트너","color":"#7B9FFF","refs":[
+                {"name":"LG전자 (2대주주)","detail":"휴머노이드 공동연구 협약. 90억 유상증자."},
+                {"name":"K-휴머노이드 연합","detail":"투모로 로보틱스·서울대 MOU. 한국 표준 주도."},
+            ]},
+            {"cat":"경진대회·표준화","color":"#FF8C69","refs":[
+                {"name":"DARPA Robotics Challenge","detail":"참가팀 다수 DYNAMIXEL 기반 플랫폼 사용"},
+                {"name":"RoboCup·ICRA","detail":"Humanoid·교육 리그 공식 채택 플랫폼"},
+            ]},
+        ]
+        for g in ref_groups:
+            st.markdown(f'<div style="font-size:12px;color:{g["color"]};font-weight:700;margin:10px 0 6px;">{g["cat"]}</div>', unsafe_allow_html=True)
+            for r in g["refs"]:
+                st.markdown(f"""
+                <div style="display:flex;gap:10px;margin-bottom:6px;padding-left:10px;border-left:2px solid {g['color']}44;">
+                  <span style="font-size:12px;color:#C0BDB4;font-weight:500;flex-shrink:0;min-width:110px;">{r['name']}</span>
+                  <span style="font-size:12px;color:#666;line-height:1.6;">{r['detail']}</span>
+                </div>""", unsafe_allow_html=True)
+
+def slide_modular_vs_vertical():
+    """모듈형 vs 수직계열화 구도"""
+    st.markdown('<div style="font-size:14px;color:#888;font-weight:600;margin-bottom:12px;">📊 프로토콜 오너의 시장 구도 — 모듈형 vs 수직계열화 채택률</div>', unsafe_allow_html=True)
+
+    approach_data = [
+        {"type":"모듈형 (Open Ecosystem)","champion":"ROBOTIS DYNAMIXEL","color":"#E8C547","share25":22,
+         "pros":["표준화된 인터페이스 → 빠른 프로토타이핑","ROS2·SDK 통합 → AI 학습 파이프라인 직결","교체·유지보수 용이 (Hot-swap)","다수 OEM 동시 납품 가능"],
+         "cons":["단가 경쟁력 (수직계열화 대비)","초고성능 특수 로봇에는 한계"],
+         "users":["오픈AI R&D","보스턴다이내믹스","MIT","K-휴머노이드 연합","전세계 1,000+ 연구기관"]},
+        {"type":"수직계열화 (Integrated)","champion":"테슬라·유니트리·아지봇","color":"#FF8C69","share25":78,
+         "pros":["원가 최소화 (대량양산)","최적화된 성능·폼팩터","IP 내재화"],
+         "cons":["개발 속도 느림","AI 학습 생태계 구축 비용","공급망 리스크 내재화","OEM 외부 판매 불가"],
+         "users":["Tesla Optimus","Unitree G1/R1","AgiBot 링시"]},
+    ]
+
+    cols = st.columns(2)
+    for col, a in zip(cols, approach_data):
+        with col:
+            users_html = "".join(f'<span style="font-size:12px;background:#E8C54718;color:#E8C547;border-radius:4px;padding:2px 8px;margin:2px 2px 0 0;display:inline-block;">{u}</span>' for u in a["users"])
+            pros_html  = "".join(f'<div style="font-size:13px;color:#888;line-height:1.65;display:flex;gap:6px;margin-bottom:3px;"><span style="color:#4EC9B0;">+</span>{p}</div>' for p in a["pros"])
+            cons_html  = "".join(f'<div style="font-size:13px;color:#888;line-height:1.65;display:flex;gap:6px;margin-bottom:3px;"><span style="color:#FF8C69;">−</span>{c}</div>' for c in a["cons"])
+            st.markdown(f"""
+            <div style="background:#18181E;border:1px solid {a['color']}33;border-top:3px solid {a['color']};
+                        border-radius:10px;padding:16px 18px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+                <div>
+                  <div style="font-size:16px;font-weight:700;color:{a['color']};margin-bottom:4px;">{a['type']}</div>
+                  <div style="font-size:13px;color:#666;">{a['champion']}</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:11px;color:#555;margin-bottom:2px;">현재 점유(추정)</div>
+                  <div style="font-size:22px;font-weight:700;color:{a['color']};font-family:'IBM Plex Mono',monospace;">{a['share25']}%</div>
+                </div>
+              </div>
+              <div style="background:#0D0D10;border-radius:6px;height:8px;margin-bottom:14px;overflow:hidden;">
+                <div style="width:{a['share25']}%;height:100%;background:{a['color']};border-radius:6px;"></div>
+              </div>
+              <div style="margin-bottom:10px;">
+                <div style="font-size:12px;color:#4EC9B0;font-weight:600;margin-bottom:6px;">장점</div>
+                {pros_html}
+              </div>
+              <div style="margin-bottom:12px;">
+                <div style="font-size:12px;color:#FF8C69;font-weight:600;margin-bottom:6px;">한계</div>
+                {cons_html}
+              </div>
+              <div style="background:{a['color']}0D;border-radius:6px;padding:10px 12px;">
+                <div style="font-size:12px;color:{a['color']};font-weight:600;margin-bottom:6px;">주요 채택 고객</div>
+                <div>{users_html}</div>
+              </div>
+            </div>""", unsafe_allow_html=True)
+
+    # 핵심 테제 요약
+    st.markdown("<div style='height:12px'/>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="background:#0F1020;border:1px solid #7B9FFF33;border-radius:8px;padding:12px 18px;
+                font-size:13px;color:#7B9FFF;line-height:1.8;">
+      💡 <b>2025~2027년은 모듈형 채택 피크 구간</b>. 이 창이 열려 있는 동안 로보티즈가 연구 표준에서 상업 표준으로
+      전환을 얼마나 빠르게 완성하느냐가 2030년 이후의 포지션을 결정합니다.
+      로봇 손·AI 워커의 Lock-in 성공 여부가 PSR 87배 정당화의 최종 판단 기준.
+    </div>""", unsafe_allow_html=True)
+
+def slide_tam():
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown(sec_lbl("💰","글로벌 휴머노이드 시장 vs 로보티즈 TAM"), unsafe_allow_html=True)
+        fig = go.Figure()
+        fig.add_scatter(x=tam_data["year"], y=tam_data["market"], name="글로벌 시장($B)",
+                        line=dict(color="#7B9FFF", width=2), marker=dict(size=6))
+        fig.add_scatter(x=tam_data["year"], y=tam_data["tam"], name="로보티즈 TAM($B)",
+                        line=dict(color="#E8C547", width=2), marker=dict(size=6))
+        fig.update_layout(**DT, height=240, yaxis=dict(title="십억달러($B)", color="#555"),
+                          legend=dict(orientation="h", y=-0.25),
+                          margin=dict(l=40, r=10, t=10, b=50))
+        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("""
+        <div style="font-size:12px;color:#444;line-height:1.7;margin-top:4px;">
+          * 글로벌 시장 성장에도 채택률(%)은 수직계열화로 점진 하락 —<br>
+          TAM 절대값은 성장하나 <b style="color:#E8C547;">점유율 방어</b>가 핵심 변수
+        </div>""", unsafe_allow_html=True)
+
+    with c2:
+        st.markdown(sec_lbl("📊","액추에이터 시장 세그먼트 추이 (추정)"), unsafe_allow_html=True)
+        fig2 = go.Figure()
+        fig2.add_bar(x=adoption_scenarios["year"], y=adoption_scenarios["연구기관"],
+                     name="연구·교육", marker_color="#E8C547", opacity=0.85)
+        fig2.add_bar(x=adoption_scenarios["year"], y=adoption_scenarios["초기상업"],
+                     name="초기상업화", marker_color="#4EC9B0", opacity=0.85)
+        fig2.add_bar(x=adoption_scenarios["year"], y=adoption_scenarios["대량양산"],
+                     name="대량양산", marker_color="#7B9FFF", opacity=0.85)
+        fig2.update_layout(**DT, height=240, barmode="stack",
+                           yaxis=dict(title="비중 (%)", color="#555"),
+                           legend=dict(orientation="h", y=-0.25),
+                           margin=dict(l=40, r=10, t=10, b=50))
+        st.plotly_chart(fig2, use_container_width=True)
+        st.markdown("""
+        <div style="font-size:12px;color:#444;line-height:1.7;margin-top:4px;">
+          * 연구용 비중 감소 + 상업화 비중 확대 —<br>
+          <b style="color:#4EC9B0;">초기상업화 구간(2025~2028)</b>이 로보티즈 모듈형 수요 피크
+        </div>""", unsafe_allow_html=True)
+
+def slide_pacemaker():
+    """4단계 전환 로드맵 + 핵심 모니터링 지표"""
+    st.markdown(sec_lbl("🗺️","페이스메이커 → 표준 플랫폼: 4단계 전환 시나리오"), unsafe_allow_html=True)
+
+    phases = [
+        {"label":"Phase 1","title":"연구 표준 (현재)","color":"#4EC9B0","icon":"🔬",
+         "desc":"글로벌 연구기관 80%+ 다이나믹셀 채택. 피지컬 AI 학습 데이터가 다이나믹셀 환경에서 생성됨.",
+         "robotis":"다이나믹셀 = 피지컬AI 학습의 표준 하드웨어. 연구용 모델이 상업용으로 전환될 때 다이나믹셀 기반 설계가 기준점.",
+         "kpi":"글로벌 연구기관 채택 수 / ROS2 DYNAMIXEL 의존도"},
+        {"label":"Phase 2","title":"초기 상업화 (2025~2027)","color":"#E8C547","icon":"🏭",
+         "desc":"연구 프로토타입 → 소량 B2B 납품. 다이나믹셀 기반 설계가 그대로 양산 BOM에 탑재.",
+         "robotis":"오픈AI AI 워커, K-휴머노이드 연합이 이 단계. 수직계열화 전환 전 모듈형 수요 피크.",
+         "kpi":"AI 워커 수주 누적 / 로봇 손 빅테크 납품 건수"},
+        {"label":"Phase 3","title":"대량양산 분기점 (2027~2030)","color":"#FF8C69","icon":"⚠️",
+         "desc":"연간 수만 대 이상 생산 시 OEM들이 원가 절감 위해 내재화 검토. 모듈형 비중 감소 압력.",
+         "robotis":"핵심 위험 구간. 고마진 Y 시리즈·로봇 손으로 포지션 유지해야. 표준에서 프리미엄으로 전략 전환 필요.",
+         "kpi":"DYNAMIXEL Y 시리즈 OEM 채택 비율 / 로봇 손 대형 고객사 Lock-in 수"},
+        {"label":"Phase 4","title":"생태계 플랫폼화 (2030+)","color":"#7B9FFF","icon":"🌐",
+         "desc":"다이나믹셀이 로봇 관절의 USB-C처럼 통용 표준이 된 경우 vs. 틈새 프리미엄으로 축소된 경우.",
+         "robotis":"낙관: 피지컬 AI OS + 하드웨어 표준 통합으로 인텔 CPU급 위상. 비관: 중국 저가에 시장 잠식.",
+         "kpi":"독립 로봇 스타트업의 DYNAMIXEL 기본 채택 여부 / 표준화 기구 참여"},
+    ]
+    for pm in phases:
+        st.markdown(f"""
+        <div style="display:grid;grid-template-columns:170px 1fr 1fr;gap:14px;
+                    padding:12px 16px;background:#0D0D10;border-radius:8px;
+                    border-left:3px solid {pm['color']};margin-bottom:8px;">
+          <div>
+            <div style="font-size:12px;background:{pm['color']}22;color:{pm['color']};border-radius:4px;
+                        padding:3px 8px;display:inline-block;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;">
+              {pm['icon']} {pm['label']}
+            </div>
+            <div style="font-size:14px;color:#C0BDB4;font-weight:600;line-height:1.5;">{pm['title']}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#555;font-weight:600;margin-bottom:4px;">시장 구도</div>
+            <div style="font-size:13px;color:#888;line-height:1.7;">{pm['desc']}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:{pm['color']};font-weight:600;margin-bottom:4px;">로보티즈 전략 포인트</div>
+            <div style="font-size:13px;color:#888;line-height:1.7;margin-bottom:6px;">{pm['robotis']}</div>
+            <div style="font-size:11px;color:#444;font-family:'IBM Plex Mono',monospace;">📌 KPI: {pm['kpi']}</div>
+          </div>
+        </div>""", unsafe_allow_html=True)
+
+    # 핵심 모니터링 지표
+    st.markdown("<div style='height:10px'/>", unsafe_allow_html=True)
+    monitor_groups = [
+        {"title":"생태계 지표","color":"#E8C547","items":[
+            "ROS2 공식 DYNAMIXEL 패키지 월 다운로드 수",
+            "글로벌 로봇 경진대회 DYNAMIXEL 탑재 팀 비율",
+            "신규 피지컬AI 스타트업의 첫 하드웨어 선택 비율",
+        ]},
+        {"title":"상업화 전환 지표","color":"#4EC9B0","items":[
+            "AI 워커 누적 수주 → 연간 출하 전환율",
+            "로봇 손 HX5 빅테크 납품 고객사 수",
+            "DYNAMIXEL Y 시리즈 OEM 설계 채택 건수",
+        ]},
+        {"title":"수직계열화 위험 신호","color":"#FF8C69","items":[
+            "보스턴다이내믹스·오픈AI 자체 액추에이터 내재화 발표 여부",
+            "유니트리 R1 글로벌 연구기관 채택 확산 속도",
+            "로보티즈 수출 매출 중 연구용 비중 감소 추이",
+        ]},
+    ]
+    mcols = st.columns(3)
+    for col, g in zip(mcols, monitor_groups):
+        with col:
+            items_html = "".join(f'<div style="display:flex;gap:7px;margin-bottom:7px;font-size:12px;color:#777;line-height:1.6;"><span style="color:{g["color"]};flex-shrink:0;">•</span>{it}</div>' for it in g["items"])
+            st.markdown(f"""
+            <div style="background:#0A0A0C;border-radius:8px;padding:12px 14px;border:1px solid {g['color']}33;">
+              <div style="font-size:13px;color:{g['color']};font-weight:700;margin-bottom:10px;">{g['title']}</div>
+              {items_html}
+            </div>""", unsafe_allow_html=True)
+
+# ─── 파이프라인 ───────────────────────────────────────
 # ─── 파이프라인 ───────────────────────────────────────
 def slide_capex():
     c1, c2 = st.columns(2)
@@ -778,48 +1008,58 @@ def slide_pipeline():
 
 # ─── 경쟁 분석 ────────────────────────────────────────
 def slide_china_rivals():
+    # 경고 배너
     st.markdown("""
-    <div style="background:linear-gradient(90deg,rgba(255,68,68,0.13),rgba(255,140,105,0.07));
-                border:1px solid rgba(255,68,68,0.27);border-radius:10px;padding:10px 16px;margin-bottom:12px;
-                display:flex;align-items:center;gap:12px;">
-      <span style="font-size:30px;">🚨</span>
-      <div style="font-size:27px;color:#888;line-height:1.65;">
+    <div style="background:linear-gradient(90deg,rgba(255,68,68,0.12),rgba(255,140,105,0.05));
+                border:1px solid rgba(255,68,68,0.25);border-radius:10px;
+                padding:9px 16px;margin-bottom:10px;
+                display:flex;align-items:center;gap:10px;">
+      <span style="font-size:22px;">🚨</span>
+      <div style="font-size:15px;color:#AAA;line-height:1.6;">
         <b style="color:#FF6B6B;">중국발 가격 파괴 위협</b> — 2025년 글로벌 출하 1.6만대 중
         <span style="color:#FF8C69;font-weight:600;">중국산 80%+</span> 점유.
         유니트리 R1 <span style="color:#FF8C69;font-weight:600;">$5,900</span> — 미국 경쟁사의 ⅛ 수준.
       </div>
     </div>""", unsafe_allow_html=True)
 
+    # 경쟁사 카드 — 한 줄 컴팩트 레이아웃
     for r in china_rivals:
         st.markdown(f"""
-        <div class="ir-card" style="border-left:3px solid {r['tc']};padding:12px 16px;
-             display:grid;grid-template-columns:180px 1fr 1fr;gap:16px;margin-bottom:8px;">
+        <div style="background:#18181E;border:1px solid #22222A;border-left:3px solid {r['tc']};
+                    border-radius:10px;padding:10px 14px;margin-bottom:7px;
+                    display:grid;grid-template-columns:160px 1fr 1fr 1fr;gap:14px;align-items:start;">
+          <!-- 기업 정보 -->
           <div>
-            <div style="font-size:30px;font-weight:700;color:#E0DDD5;">{r['country']} {r['name']}</div>
-            <div style="font-size:22px;color:#555;margin-bottom:6px;">{r['city']}</div>
-            <div style="display:inline-block;background:{r['tc']}22;color:{r['tc']};font-size:21px;
-                        padding:2px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-weight:700;">
-              위협도: {r['threat']}
-            </div>
-            <div style="margin-top:7px;font-size:22px;color:#666;">{r['product']}</div>
-            <div style="margin-top:4px;font-size:22px;color:#E8C547;font-family:'IBM Plex Mono',monospace;">{r['price']}</div>
+            <div style="font-size:16px;font-weight:700;color:#E0DDD5;margin-bottom:2px;">{r['country']} {r['name']}</div>
+            <div style="font-size:13px;color:#555;margin-bottom:5px;">{r['city']}</div>
+            <div style="display:inline-block;background:{r['tc']}22;color:{r['tc']};font-size:12px;
+                        padding:2px 7px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:5px;">
+              위협도 {r['threat']}
+            </div><br>
+            <span style="font-size:13px;color:#777;">{r['product']}</span><br>
+            <span style="font-size:14px;color:#E8C547;font-family:'IBM Plex Mono',monospace;font-weight:600;">{r['price']}</span>
           </div>
+          <!-- 출하 -->
           <div>
-            <div style="font-size:21px;color:#4EC9B0;margin-bottom:3px;font-weight:600;">📦 출하 현황</div>
-            <div style="font-size:22px;color:#888;line-height:1.55;margin-bottom:8px;">{r['shipment']}</div>
-            <div style="font-size:21px;color:#4EC9B0;margin-bottom:3px;font-weight:600;">✅ 강점</div>
-            <div style="font-size:22px;color:#888;line-height:1.55;">{r['strength']}</div>
+            <div style="font-size:12px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">📦 출하 현황</div>
+            <div style="font-size:13px;color:#888;line-height:1.55;">{r['shipment']}</div>
           </div>
+          <!-- 강점 -->
           <div>
-            <div style="font-size:21px;color:#FF8C69;margin-bottom:3px;font-weight:600;">⚠️ 약점</div>
-            <div style="font-size:22px;color:#888;line-height:1.55;margin-bottom:8px;">{r['weakness']}</div>
-            <div style="font-size:21px;color:{r['tc']};margin-bottom:3px;font-weight:600;">🎯 충돌 영역</div>
-            <div style="font-size:22px;color:#888;line-height:1.55;">{r['overlap']}</div>
+            <div style="font-size:12px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">✅ 강점</div>
+            <div style="font-size:13px;color:#888;line-height:1.55;">{r['strength']}</div>
+          </div>
+          <!-- 약점·충돌 -->
+          <div>
+            <div style="font-size:12px;color:#FF8C69;font-weight:600;margin-bottom:4px;">⚠️ 약점</div>
+            <div style="font-size:13px;color:#888;line-height:1.55;margin-bottom:6px;">{r['weakness']}</div>
+            <div style="font-size:12px;color:{r['tc']};font-weight:600;margin-bottom:4px;">🎯 충돌 영역</div>
+            <div style="font-size:13px;color:#888;line-height:1.55;">{r['overlap']}</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
 def slide_radar_diff():
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns([5, 4])
     with c1:
         st.markdown(sec_lbl("🕸️","글로벌 경쟁력 비교 레이더"), unsafe_allow_html=True)
         cats = radar_compare["subject"].tolist()
@@ -827,12 +1067,13 @@ def slide_radar_diff():
         for col_name, color in [("로보티즈","#E8C547"),("유니트리","#FF4444"),("아지봇","#FF8C69"),("MAXON","#4EC9B0")]:
             vals = radar_compare[col_name].tolist() + [radar_compare[col_name].iloc[0]]
             fig.add_trace(go.Scatterpolar(r=vals, theta=cats+[cats[0]], name=col_name,
-                line=dict(color=color, width=2), fill="toself", opacity=0.75))
-        fig.update_layout(**DT, height=300,
+                line=dict(color=color, width=2), fill="toself", opacity=0.7))
+        fig.update_layout(**DT, height=360,
                           polar=dict(bgcolor="#18181E",
-                                     radialaxis=dict(visible=True,range=[0,100],color="#333"),
-                                     angularaxis=dict(color="#555")),
-                          legend=dict(orientation="h",y=-0.18,font=dict(size=10)))
+                                     radialaxis=dict(visible=True, range=[0,100], color="#333", tickfont=dict(size=10)),
+                                     angularaxis=dict(color="#555", tickfont=dict(size=11))),
+                          legend=dict(orientation="h", y=-0.12, font=dict(size=12)),
+                          margin=dict(l=20, r=20, t=20, b=40))
         st.plotly_chart(fig, use_container_width=True)
 
     with c2:
@@ -850,46 +1091,65 @@ def slide_radar_diff():
         ]
         for d in diff:
             st.markdown(f"""
-            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1E1E28;">
-              <div style="font-size:24px;color:{d['color']};font-weight:600;margin-bottom:5px;">{d['title']}</div>
-              <div style="font-size:24px;color:#666;line-height:1.65;">
-                <span style="color:#4EC9B0;">✅ 우위:</span> {d['win']}<br>
-                <span style="color:#FF8C69;">⚠️ 열위:</span> {d['lose']}
+            <div style="margin-bottom:14px;padding:12px 14px;background:#18181E;
+                        border:1px solid #22222A;border-left:3px solid {d['color']};border-radius:8px;">
+              <div style="font-size:15px;color:{d['color']};font-weight:700;margin-bottom:7px;">{d['title']}</div>
+              <div style="font-size:13px;color:#777;line-height:1.7;">
+                <span style="color:#4EC9B0;font-weight:600;">✅ 우위</span>&nbsp; {d['win']}
+              </div>
+              <div style="font-size:13px;color:#777;line-height:1.7;margin-top:4px;">
+                <span style="color:#FF8C69;font-weight:600;">⚠️ 열위</span>&nbsp; {d['lose']}
               </div>
             </div>""", unsafe_allow_html=True)
 
 def slide_krobot():
     st.markdown(sec_lbl("📊","K-로봇 빅4 재무 비교 (2025E)"), unsafe_allow_html=True)
+
+    # 상단: 4개 기업 카드
     cols = st.columns(4)
     for col, c in zip(cols, comp_data):
-        oc = "#4EC9B0" if c["op25"]>0 else "#FF8C69"
-        os = f"+{c['op25']}억" if c["op25"]>0 else f"{c['op25']}억"
+        oc = "#4EC9B0" if c["op25"] > 0 else "#FF8C69"
+        os = f"+{c['op25']}억" if c["op25"] > 0 else f"{c['op25']}억"
         with col:
             st.markdown(f"""
-            <div style="background:#0D0D12;border-radius:10px;padding:16px;border:1px solid {c['color']}33;height:160px;">
-              <div style="font-size:30px;font-weight:700;color:{c['color']};margin-bottom:12px;">{c['name']}</div>
-              {kv_row("시총", c['cap']+"조")}
-              {kv_row("매출(E)", str(c['rev25'])+"억")}
-              {kv_row("영업이익(E)", os, oc)}
-              <div style="font-size:22px;background:{c['color']}15;color:{c['color']};border-radius:4px;padding:3px 8px;text-align:center;margin-top:8px;">{c['backer']}</div>
+            <div style="background:#0D0D12;border-radius:10px;padding:14px 12px;
+                        border:1px solid {c['color']}33;border-top:3px solid {c['color']};">
+              <div style="font-size:18px;font-weight:700;color:{c['color']};margin-bottom:10px;">{c['name']}</div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
+                <span style="font-size:13px;color:#555;">시총</span>
+                <span style="font-size:13px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['cap']}조</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
+                <span style="font-size:13px;color:#555;">매출(E)</span>
+                <span style="font-size:13px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['rev25']}억</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
+                <span style="font-size:13px;color:#555;">영업이익(E)</span>
+                <span style="font-size:13px;color:{oc};font-family:'IBM Plex Mono',monospace;font-weight:600;">{os}</span>
+              </div>
+              <div style="margin-top:8px;background:{c['color']}15;color:{c['color']};border-radius:4px;
+                          padding:3px 6px;text-align:center;font-size:12px;">{c['backer']}</div>
             </div>""", unsafe_allow_html=True)
 
-    st.markdown("<div style='height:14px'/>", unsafe_allow_html=True)
-    # 시총 vs 매출 버블
+    st.markdown("<div style='height:12px'/>", unsafe_allow_html=True)
+
+    # 하단: 버블 차트
     fig = go.Figure()
     for c in comp_data:
         fig.add_trace(go.Scatter(
             x=[c["rev25"]], y=[c["cap"]],
             mode="markers+text",
-            marker=dict(size=max(abs(c["op25"])*0.3, 20), color=c["color"], opacity=0.75),
+            marker=dict(size=max(abs(c["op25"]) * 0.28, 18), color=c["color"], opacity=0.75,
+                        line=dict(color=c["color"], width=1)),
             text=[c["name"]], textposition="top center",
-            textfont=dict(size=11, color=c["color"]),
+            textfont=dict(size=13, color=c["color"]),
             name=c["name"]
         ))
-    fig.update_layout(**DT, height=240,
-                      xaxis=dict(title="매출액(억원)",color="#555"),
-                      yaxis=dict(title="시가총액(조원)",color="#555"),
-                      showlegend=False)
+    fig.update_layout(**DT, height=230,
+                      xaxis=dict(title="매출액(억원)", color="#555", title_font=dict(size=12)),
+                      yaxis=dict(title="시가총액(조원)", color="#555", title_font=dict(size=12)),
+                      showlegend=False,
+                      margin=dict(l=40, r=10, t=10, b=40))
     st.plotly_chart(fig, use_container_width=True)
 
 # ─── 실적 추이 ────────────────────────────────────────
@@ -1066,6 +1326,9 @@ SLIDE_RENDERERS = {
     "주가 이벤트":          slide_price_events,
     "기업 정보 & 주주":     slide_company_info,
     "제품 포트폴리오":       slide_portfolio,
+    "프로토콜 오너 해자":    slide_protocol_moat,
+    "SDK & B2B 레퍼런스":   slide_sdk_reference,
+    "모듈형 vs 수직계열화":  slide_modular_vs_vertical,
     "TAM & 채택률":         slide_tam,
     "수혜 4단계 로드맵":     slide_pacemaker,
     "유상증자 자금계획":     slide_capex,
