@@ -291,12 +291,13 @@ DARK_TEMPLATE = dict(
 
 def bar_color(val, is_forecast=False):
     if is_forecast:
-        return "#E8C54766"
+        return "rgba(232,197,71,0.4)"
     return "#E8C547"
 
 def op_color(val, is_forecast=False):
-    alpha = "66" if is_forecast else "AA"
-    return f"#4EC9B0{alpha}" if val >= 0 else f"#FF8C69{alpha}"
+    if is_forecast:
+        return "rgba(78,201,176,0.4)" if val >= 0 else "rgba(255,140,105,0.4)"
+    return "rgba(78,201,176,0.67)" if val >= 0 else "rgba(255,140,105,0.67)"
 
 
 def metric_card(label, value, sub, color):
@@ -557,7 +558,7 @@ with tabs[2]:
     with c1:
         fig = go.Figure()
         fig.add_bar(x=tam_data["year"], y=tam_data["market"],
-                    name="글로벌 시장(조원)", marker_color="#7B9FFF44")
+                    name="글로벌 시장(조원)", marker_color="rgba(123,159,255,0.27)")
         fig.add_bar(x=tam_data["year"], y=tam_data["tam"],
                     name="로보티즈 TAM(조원)", marker_color="#E8C547")
         fig.update_layout(**DARK_TEMPLATE, title="시장 vs 로보티즈 TAM (조원)", barmode="overlay",
@@ -709,8 +710,9 @@ with tabs[3]:
         border = "#E8C547" if is_now else "#333"
         tc = "#0A0A0C" if is_now else "#E8C547"
         etc = "#0A0A0C" if is_now else "#888"
+        border_color = "rgba(10,10,12,0.27)" if is_now else "#333"
         events_html = "".join(
-            f'<div style="font-size:11px;color:{etc};line-height:1.6;margin-bottom:4px;padding-left:8px;border-left:2px solid {"#0A0A0C44" if is_now else "#333"};">{ev}</div>'
+            f'<div style="font-size:11px;color:{etc};line-height:1.6;margin-bottom:4px;padding-left:8px;border-left:2px solid {border_color};">{ev}</div>'
             for ev in r["events"]
         )
         label = f"{r['period']} ◀ 현재" if is_now else r["period"]
@@ -904,7 +906,7 @@ with tabs[5]:
         st.caption("* 2025E 추정 · 2026F 다이와증권 전망")
 
         fig = go.Figure()
-        rev_colors = ["#E8C547" if i < 4 else "#E8C54766" for i in range(len(revenue_data))]
+        rev_colors = ["#E8C547" if i < 4 else "rgba(232,197,71,0.4)" for i in range(len(revenue_data))]
         op_colors  = [op_color(row["op"], i >= 4) for i, row in revenue_data.iterrows()]
 
         fig.add_bar(x=revenue_data["year"], y=revenue_data["rev"], name="매출액",
@@ -946,7 +948,7 @@ with tabs[5]:
         section_title("📈","분기별 실적 추이 (2024~2025)")
         st.caption("매출액(막대, 억원) / 영업이익(선, 억원)")
 
-        q_colors = ["#E8C54744" if i < 4 else "#E8C54788" for i in range(len(quarter_data))]
+        q_colors = ["rgba(232,197,71,0.27)" if i < 4 else "rgba(232,197,71,0.53)" for i in range(len(quarter_data))]
         fig2 = go.Figure()
         fig2.add_bar(x=quarter_data["q"], y=quarter_data["rev"], name="매출액",
                      marker_color=q_colors)
@@ -1058,4 +1060,3 @@ with tabs[6]:
         2023년 한국IR협의회 리포트 포맷을 기반으로 2026년 공개 정보를 재구성하였습니다.
       </div>
     </div>""", unsafe_allow_html=True)
-
