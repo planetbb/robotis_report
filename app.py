@@ -410,7 +410,7 @@ with st.sidebar:
     st.markdown("<div style='height:20px'/>", unsafe_allow_html=True)
     st.markdown("""
     <div style="font-size:11px;color:#333;line-height:1.6;padding:0 4px;">
-      ⚠️ 본 자료는 투자 참고 목적이며 투자의 최종 책임은 투자자 본인에게 있습니다.
+      ⚠️ 본 자료는 투자 참고 목적이며 Claude는 금융 전문가가 아닙니다. 투자의 최종 책임은 투자자 본인에게 있습니다.
     </div>
     """, unsafe_allow_html=True)
 
@@ -420,7 +420,10 @@ with st.sidebar:
 cur_sec   = SECTION_KEYS[st.session_state.section_idx]
 cur_slides = SECTIONS[cur_sec]
 n_slides  = len(cur_slides)
-si        = st.session_state.slide_idx  # 현재 슬라이드 인덱스
+# 섹션 전환 시 인덱스가 범위를 벗어나지 않도록 안전하게 클램핑
+if st.session_state.slide_idx >= n_slides:
+    st.session_state.slide_idx = 0
+si        = st.session_state.slide_idx
 cur_slide  = cur_slides[si]
 
 # ════════════════════════════════════════════════════
