@@ -1295,13 +1295,13 @@ def slide_opinion():
     # 시나리오 3종
     st.markdown("<div style='height:10px'/>", unsafe_allow_html=True)
     scenarios = [
-        {"label":"베스트 케이스 🚀","prob":"15%","color":"#4EC9B0",
+        {"label":"Best Case 🚀","prob":"15%","color":"#4EC9B0",
          "title":"다이나믹셀 Y / 로봇 손 테슬라 옵티머스 공급 확정",
          "impact":"연간 수천억 B2B 계약. PSR 리레이팅 완전 정당화. 주가 재급등 트리거."},
-        {"label":"베이스 케이스 🔬","prob":"45%","color":"#E8C547",
+        {"label":"Base Case 🔬","prob":"45%","color":"#E8C547",
          "title":"R&D·소량 납품 → 공급사 등록 검증 단계",
          "impact":"직접 매출 미미하나 공급사 등록 자체가 모멘텀. 2027년 이후 확대 기대감 유지."},
-        {"label":"베어 케이스 ❌","prob":"40%","color":"#FF8C69",
+        {"label":"Worst Case ❌","prob":"40%","color":"#FF8C69",
          "title":"테슬라 완전 내재화 — 공급 불발",
          "impact":"옵티머스 카탈리스트 소멸. PSR 87배 정당화 근거 약화. 주가 조정 압력."},
     ]
