@@ -21,7 +21,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-/* ── Streamlit 상단 툴바·헤더·사이드바 완전 숨김 ── */
+/* ── Streamlit 크롬 완전 숨김 ── */
 header[data-testid="stHeader"] { display: none !important; }
 #MainMenu { display: none !important; }
 footer { display: none !important; }
@@ -29,18 +29,16 @@ footer { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 [data-testid="stStatusWidget"] { display: none !important; }
 section[data-testid="stSidebar"] { display: none !important; }
-[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="collapsedControl"]  { display: none !important; }
 
 html, body, [class*="css"] {
     font-family: 'Noto Sans KR', sans-serif;
     background: #0A0A0C;
     color: #E0DDD5;
     font-size: 14px;
-    line-height: 1.5;
 }
 .stApp { background: #0A0A0C; }
 
-/* 본문 상단 패딩 — 고정 상단바 높이만큼 확보 */
 .block-container {
     padding-top: 0 !important;
     padding-bottom: 5rem !important;
@@ -50,107 +48,131 @@ html, body, [class*="css"] {
 }
 div[data-testid="stHorizontalBlock"] { gap: 0px; }
 
-/* ── 고정 상단 네비 바 (웹+모바일 공통) ── */
-.top-nav-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    background: #0D0D12;
-    border-bottom: 1px solid #1E1E28;
-    padding: 0 16px;
-    height: 52px;
+/* ── 상단 탭 네비 (Streamlit selectbox + buttons) ── */
+div[data-testid="stSelectbox"] > div {
+    background: #0D0D12 !important;
+    border: 1px solid #1E1E28 !important;
+    border-radius: 8px !important;
+    color: #E0DDD5 !important;
+    font-size: 13px !important;
+}
+div[data-testid="stSelectbox"] svg { fill: #555 !important; }
+
+/* 상단 네비 버튼 행 공통 */
+.top-nav-btn-row .stButton > button {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
+    color: #555 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 8px 10px !important;
+    min-height: unset !important;
+    height: auto !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    transition: all .15s !important;
+    white-space: nowrap !important;
+}
+.top-nav-btn-row .stButton > button:hover {
+    color: #C0BDB4 !important;
+    border-bottom-color: #444 !important;
+    background: #1A1A24 !important;
+}
+.top-nav-btn-row-active .stButton > button {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid #E8C547 !important;
+    border-radius: 0 !important;
+    color: #E8C547 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    padding: 8px 10px !important;
+    min-height: unset !important;
+    height: auto !important;
+    width: 100% !important;
+    box-shadow: none !important;
+}
+
+/* ── 하단 네비 prev/next 버튼 ── */
+.bottom-prev-btn .stButton > button,
+.bottom-next-btn .stButton > button {
+    background: #1A1A24 !important;
+    border: 1px solid #2A2A38 !important;
+    border-radius: 8px !important;
+    color: #888 !important;
+    font-size: 22px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    width: 100% !important;
+    min-height: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    transition: all .2s !important;
+}
+.bottom-prev-btn .stButton > button:hover,
+.bottom-next-btn .stButton > button:hover {
+    background: #22223A !important;
+    border-color: #E8C547 !important;
+    color: #E8C547 !important;
+}
+.bottom-prev-btn .stButton > button:disabled,
+.bottom-next-btn .stButton > button:disabled {
+    opacity: 0.2 !important;
+}
+
+/* ── 네비 버튼: 좌우 tall (기존 유지) ── */
+.nav-wrap {
     display: flex;
-    align-items: center;
-    gap: 0;
+    height: 100%;
+    align-items: stretch;
 }
-.top-nav-logo {
+.nav-wrap .stButton {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-right: 16px;
-    flex-shrink: 0;
-}
-.top-nav-logo-icon {
-    background: linear-gradient(135deg,#E8C547,#FF8C69);
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-}
-.top-nav-logo-text {
-    font-size: 13px; font-weight: 700; color: #E0DDD5; white-space: nowrap;
-}
-.top-nav-logo-sub {
-    font-size: 10px; color: #444;
-    font-family: 'IBM Plex Mono', monospace;
-}
-.top-nav-divider {
-    width: 1px; height: 28px; background: #1E1E28; margin-right: 12px; flex-shrink: 0;
-}
-.top-nav-links {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
     flex: 1;
+    height: 100%;
 }
-.top-nav-links::-webkit-scrollbar { display: none; }
-.top-nav-btn {
-    background: transparent;
-    border: none;
-    border-radius: 6px;
-    color: #555;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 5px 10px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: all .15s;
-    text-decoration: none;
+.nav-wrap .stButton > button {
+    background: #1A1A24 !important;
+    border: 1px solid #2A2A38 !important;
+    border-radius: 10px !important;
+    color: #888 !important;
+    font-size: 32px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 500px !important;
+    padding: 0 !important;
+    box-shadow: 0 0 12px rgba(0,0,0,0.3) !important;
+    transition: all .2s !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
-.top-nav-btn:hover { background: #1E1E28; color: #C0BDB4; }
-.top-nav-btn.active {
-    background: #1E1E28;
-    color: #E8C547;
-    border-bottom: 2px solid #E8C547;
+.nav-wrap .stButton > button:hover {
+    background: #22223A !important;
+    border-color: #E8C547 !important;
+    color: #E8C547 !important;
 }
-/* 모바일에서 텍스트 버튼 대신 셀렉트로 전환 */
-.top-nav-select-wrap { display: none; }
-@media (max-width: 640px) {
-    .top-nav-links { display: none; }
-    .top-nav-select-wrap {
-        display: flex;
-        flex: 1;
-        align-items: center;
-    }
-    .top-nav-select-wrap select {
-        width: 100%;
-        background: #18181E;
-        color: #E0DDD5;
-        border: 1px solid #2A2A35;
-        border-radius: 6px;
-        padding: 6px 10px;
-        font-size: 13px;
-        font-family: 'Noto Sans KR', sans-serif;
-        outline: none;
-        cursor: pointer;
-        -webkit-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-        padding-right: 28px;
-    }
+.nav-wrap .stButton > button:disabled {
+    opacity: 0.12 !important;
+    cursor: not-allowed !important;
+}
+
+/* 모바일 패딩 */
+@media (max-width: 768px) {
     .block-container {
         padding-left: 0.3rem !important;
         padding-right: 0.3rem !important;
     }
+    .slide-body { padding: 14px 14px !important; }
+    .slide-topbar { padding: 10px 14px !important; }
+    .slide-footer { padding: 8px 14px !important; }
 }
-
-/* 상단바 높이만큼 컨텐츠 밀어내기 */
-.main-content-spacer { height: 58px; }
 
 /* ── 슬라이드 프레임 ── */
 .slide-frame {
@@ -163,76 +185,27 @@ div[data-testid="stHorizontalBlock"] { gap: 0px; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 22px;
+    padding: 14px 28px;
     border-bottom: 1px solid #1E1E28;
     background: #0D0D12;
-    flex-wrap: wrap;
-    gap: 6px;
 }
-.slide-body { padding: 20px 22px; }
-
-/* ── 하단 고정 네비게이션 바 ── */
-.bottom-nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    background: #0D0D12;
+.slide-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 28px;
     border-top: 1px solid #1E1E28;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 0 20px;
+    background: #0D0D12;
+    position: relative;
 }
-.bottom-nav-prev,
-.bottom-nav-next {
-    background: #1A1A24;
-    border: 1px solid #2A2A38;
-    border-radius: 8px;
-    color: #888;
-    font-size: 20px;
-    width: 40px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: all .2s;
-    flex-shrink: 0;
-    text-decoration: none;
-}
-.bottom-nav-prev:hover, .bottom-nav-next:hover {
-    background: #22223A;
-    border-color: #E8C547;
-    color: #E8C547;
-}
-.bottom-nav-prev.disabled, .bottom-nav-next.disabled {
-    opacity: 0.15;
-    pointer-events: none;
-    cursor: not-allowed;
-}
-.bottom-nav-dots {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex: 1;
-    justify-content: center;
-    overflow: hidden;
-}
-.bottom-nav-counter {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: #444;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
+.slide-body { padding: 22px 28px; }
 
 /* ── 카드 ── */
 .ir-card {
     background: #18181E;
     border: 1px solid #22222A;
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 20px 22px;
     margin-bottom: 12px;
 }
 
@@ -246,64 +219,80 @@ div[data-testid="stHorizontalBlock"] { gap: 0px; }
 }
 .prog-fill { height: 100%; border-radius: 4px; }
 
-/* ── 글씨 크기 표준화 (일관성 유지) ── */
-.text-xs  { font-size: 11px !important; line-height: 1.5 !important; }
-.text-sm  { font-size: 12px !important; line-height: 1.5 !important; }
-.text-md  { font-size: 14px !important; line-height: 1.5 !important; }
-.text-lg  { font-size: 15px !important; line-height: 1.6 !important; }
-.text-xl  { font-size: 17px !important; line-height: 1.6 !important; }
-
-/* 본문 내 임의 font-size 과다 변동 억제 */
-.slide-body div, .slide-body span, .slide-body p {
-    line-height: inherit;
+/* ── 네비 버튼: 세로로 꽉 찬 tall 버튼 ── */
+.nav-wrap {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
 }
+.nav-wrap .stButton {
+    display: flex;
+    flex: 1;
+    height: 100%;
+}
+.nav-wrap .stButton > button {
+    background: #1A1A24 !important;
+    border: 1px solid #2A2A38 !important;
+    border-radius: 10px !important;
+    color: #888 !important;
+    font-size: 32px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 500px !important;
+    padding: 0 !important;
+    box-shadow: 0 0 12px rgba(0,0,0,0.3) !important;
+    transition: all .2s !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.nav-wrap .stButton > button:hover {
+    background: #22223A !important;
+    border-color: #E8C547 !important;
+    color: #E8C547 !important;
+    box-shadow: 0 0 20px rgba(232,197,71,.15) !important;
+}
+.nav-wrap .stButton > button:disabled {
+    opacity: 0.12 !important;
+    cursor: not-allowed !important;
+}
+
+/* ── 글씨 크기 표준화 ── */
+.text-xs  { font-size: 11px !important; }
+.text-sm  { font-size: 13px !important; }
+.text-md  { font-size: 14px !important; }
+.text-lg  { font-size: 16px !important; }
+.text-xl  { font-size: 18px !important; }
 
 /* ── 표 스타일 표준화 ── */
 .ir-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
-    table-layout: fixed;
+    font-size: 14px;
 }
 .ir-table th {
     text-align: center;
     color: #555;
-    font-size: 12px;
-    padding: 8px 8px;
+    font-size: 13px;
+    padding: 8px 10px;
     border-bottom: 1px solid #22222A;
     font-weight: 600;
     letter-spacing: 0.3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .ir-table td {
-    padding: 8px 8px;
-    font-size: 13px;
+    padding: 8px 10px;
+    font-size: 14px;
     border-bottom: 1px solid #18181E;
     vertical-align: middle;
     line-height: 1.5;
-    word-break: keep-all;
-}
-
-/* inline 표(동종업계 비교 등) 열 너비 균등 */
-table[style*="border-collapse"] th,
-table[style*="border-collapse"] td {
-    padding: 7px 8px !important;
-    font-size: 13px !important;
-    line-height: 1.5 !important;
-    vertical-align: middle !important;
 }
 
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 .js-plotly-plot .plotly .bg { fill: transparent !important; }
-
-/* 모바일 슬라이드 바디 패딩 축소 */
-@media (max-width: 640px) {
-    .slide-body { padding: 14px 14px !important; }
-    .slide-topbar { padding: 10px 14px !important; }
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -492,65 +481,46 @@ if "pl_checked" not in st.session_state:
     st.session_state.pl_checked = {i: False for i in range(len(pipeline_items))}
 
 # ════════════════════════════════════════════════════
-#  상단 고정 네비게이션 바 (웹+모바일 통일)
+#  버전 정보
 # ════════════════════════════════════════════════════
+APP_VERSION = "v2.1"
+APP_UPDATED = "2026-03-10 최종수정"
 
-# 상단 네비바 버튼 HTML 생성
-_nav_links_html = ""
-for _i, _sec in enumerate(SECTION_KEYS):
-    _active_cls = "active" if _i == st.session_state.section_idx else ""
-    _nav_links_html += f'<button class="top-nav-btn {_active_cls}" onclick="topNavClick({_i})">{_sec}</button>'
-
-_nav_select_html = "".join(
-    f'<option value="{_i}" {"selected" if _i == st.session_state.section_idx else ""}>{_sec}</option>'
-    for _i, _sec in enumerate(SECTION_KEYS)
-)
-
-
-# ── 섹션 네비 버튼: offscreen CSS로 화면 밖에 두되 클릭은 가능
-_nav_cols = st.columns(len(SECTION_KEYS))
-for _i, (_col, _sec) in enumerate(zip(_nav_cols, SECTION_KEYS)):
-    with _col:
-        if st.button(_sec, key=f"nav_{_i}", use_container_width=True):
-            st.session_state.section_idx = _i
-            st.session_state.slide_idx = 0
-            st.rerun()
-
-# 섹션 버튼 행 offscreen (display:none 금지 — pointer-events 유지)
-st.markdown("""
-<style>
-div[data-testid="stHorizontalBlock"]:first-of-type {
-    position: fixed !important;
-    left: -9999px !important;
-    top: 0px !important;
-    width: 1px !important;
-    pointer-events: auto !important;
-    z-index: 1 !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# ── 상단 고정 네비바 HTML + JS (offscreen 버튼을 키로 찾아 클릭)
-_nav_sec_labels = [s for s in SECTION_KEYS]  # 실제 버튼 텍스트와 일치
-
+# ════════════════════════════════════════════════════
+#  상단 헤더 + 섹션 탭 (Streamlit 네이티브 — JS 없음)
+# ════════════════════════════════════════════════════
+# 로고 + 버전 헤더
 st.markdown(f"""
-<div class="top-nav-bar">
-  <div class="top-nav-logo">
-    <div class="top-nav-logo-icon">🤖</div>
+<div style="display:flex;align-items:center;justify-content:space-between;
+            background:#0D0D12;border-bottom:1px solid #1E1E28;
+            padding:10px 16px;margin-bottom:0;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="background:linear-gradient(135deg,#E8C547,#FF8C69);width:30px;height:30px;
+                border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;">🤖</div>
     <div>
-      <div class="top-nav-logo-text">로보티즈</div>
-      <div class="top-nav-logo-sub">108490 · KOSDAQ</div>
+      <span style="font-size:14px;font-weight:700;color:#E0DDD5;">로보티즈 IR 2026</span>
+      <span style="font-size:11px;color:#444;font-family:'IBM Plex Mono',monospace;margin-left:8px;">108490 · KOSDAQ</span>
     </div>
   </div>
-  <div class="top-nav-divider"></div>
-  <div class="top-nav-links">{_nav_links_html}</div>
-  <div class="top-nav-select-wrap">
-    <select onchange="topNavClick(parseInt(this.value))">{_nav_select_html}</select>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#333;text-align:right;">
+    <span style="color:#555;">{APP_VERSION}</span>&nbsp;·&nbsp;{APP_UPDATED}
   </div>
 </div>
-<div class="main-content-spacer"></div>
 """, unsafe_allow_html=True)
 
+# 섹션 탭 — 버튼 7개를 가로로 배치
+_tab_cols = st.columns(len(SECTION_KEYS))
+for _ti, (_tc, _ts) in enumerate(zip(_tab_cols, SECTION_KEYS)):
+    with _tc:
+        _cls = "top-nav-btn-row-active" if _ti == st.session_state.section_idx else "top-nav-btn-row"
+        st.markdown(f'<div class="{_cls}">', unsafe_allow_html=True)
+        if st.button(_ts, key=f"nav_{_ti}", use_container_width=True):
+            st.session_state.section_idx = _ti
+            st.session_state.slide_idx = 0
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('<hr style="border:none;border-top:1px solid #1E1E28;margin:0 0 8px;"/>', unsafe_allow_html=True)
 
 
 # ════════════════════════════════════════════════════
@@ -1624,17 +1594,17 @@ def slide_valuation():
         </div>""", unsafe_allow_html=True)
     with c2:
         st.markdown(sec_lbl("📊","동종업종 밸류에이션 비교"), unsafe_allow_html=True)
-        th = '<tr>' + ''.join(f'<th style="text-align:center;color:#555;font-size:13px;padding:8px 8px;border-bottom:1px solid #22222A;font-weight:600;">{h}</th>' for h in ["기업명","시총","PSR(25E)","PBR(25E)"]) + '</tr>'
+        th = '<tr>' + ''.join(f'<th style="text-align:center;color:#555;font-size:14px;padding:6px 4px;border-bottom:1px solid #22222A;">{h}</th>' for h in ["기업명","시총","PSR(25E)","PBR(25E)"]) + '</tr>'
         trs = ""
         for i, p in enumerate(peers):
             bg = "#1E1E0A" if i==0 else "transparent"
             trs += f'<tr style="background:{bg};">'
-            trs += f'<td style="padding:8px 8px;color:{p["color"]};font-weight:{"700" if i==0 else "400"};font-size:13px;border-bottom:1px solid #18181E;">{p["name"]}</td>'
+            trs += f'<td style="padding:7px 4px;color:{p["color"]};font-weight:{"700" if i==0 else "400"};font-size:15px;border-bottom:1px solid #18181E;">{p["name"]}</td>'
             for val in [p["cap"],p["psr25"],p["pbr25"]]:
                 vc = "#FF8C69" if (i==0 and val not in ["3.67조","N/A"]) else "#888"
-                trs += f'<td style="text-align:center;color:{vc};font-family:\'IBM Plex Mono\',monospace;font-size:13px;padding:8px 8px;border-bottom:1px solid #18181E;">{val}</td>'
+                trs += f'<td style="text-align:center;color:{vc};font-family:\'IBM Plex Mono\',monospace;font-size:14px;padding:7px 4px;border-bottom:1px solid #18181E;">{val}</td>'
             trs += "</tr>"
-        st.markdown(f'<table style="width:100%;border-collapse:collapse;table-layout:fixed;">{th}{trs}</table>', unsafe_allow_html=True)
+        st.markdown(f'<table style="width:100%;border-collapse:collapse;">{th}{trs}</table>', unsafe_allow_html=True)
 
 
 
@@ -1711,32 +1681,22 @@ SLIDE_RENDERERS = {
 }
 
 # ════════════════════════════════════════════════════
-#  메인 레이아웃  [‹] [슬라이드프레임] [›]
+#  메인 레이아웃 — 슬라이드 + 하단 네이티브 네비바
 # ════════════════════════════════════════════════════
 
-# ════════════════════════════════════════════════════
-#  메인 레이아웃 — 슬라이드 프레임 (상하단 고정 바 사용)
-# ════════════════════════════════════════════════════
-
-# ── 상단 타이틀바
+# ── 슬라이드 타이틀바
 _topbar = f"""
 <div class="slide-frame">
   <div class="slide-topbar">
     <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-      <div style="font-size:11px;color:#555;font-family:'IBM Plex Mono',monospace;
-                  white-space:nowrap;letter-spacing:0.5px;">{cur_sec}</div>
-      <span style="color:#2A2A35;font-size:14px;">›</span>
+      <div style="font-size:12px;color:#444;font-family:'IBM Plex Mono',monospace;
+                  white-space:nowrap;">{cur_sec}</div>
+      <span style="color:#2A2A35;">›</span>
       <div style="font-size:15px;font-weight:700;color:#E8C547;
                   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{cur_slide}</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-      <span style="font-size:11px;color:#333;font-family:'IBM Plex Mono',monospace;">ROBOTIS 108490 · 2026.03</span>
-      <div style="background:#1E1E28;border:1px solid #2A2A35;border-radius:6px;
-                  padding:4px 10px;display:flex;align-items:center;gap:6px;">
-        <span style="font-size:14px;font-weight:700;color:#E8C547;
-                     font-family:'IBM Plex Mono',monospace;letter-spacing:1px;">{si+1}/{n_slides}</span>
-      </div>
-    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;
+                color:#555;flex-shrink:0;">{si+1}&thinsp;/&thinsp;{n_slides}</div>
   </div>
   <div class="slide-body">
 """
@@ -1746,130 +1706,47 @@ _footer = """
 </div>
 """
 
-# ── 슬라이드 렌더링 (상단)
+# ── 슬라이드 렌더
 st.markdown(_topbar, unsafe_allow_html=True)
 SLIDE_RENDERERS[cur_slide]()
 st.markdown(_footer, unsafe_allow_html=True)
 
-# ── 점 인디케이터 (하단 바용)
-_dots_html = '<div class="bottom-nav-dots">'
-_max_dots = 10
-if n_slides <= _max_dots:
-    for _i in range(n_slides):
-        if _i == si:
-            _dots_html += '<div style="width:20px;height:6px;border-radius:3px;background:#E8C547;flex-shrink:0;"></div>'
-        else:
-            _dots_html += '<div style="width:6px;height:6px;border-radius:50%;background:#2A2A35;flex-shrink:0;"></div>'
-_dots_html += '</div>'
+# ── 하단 네비 바: ‹  [점 인디케이터]  페이지  ›
+_dots_html = ""
+for _di in range(n_slides):
+    if _di == si:
+        _dots_html += '<span style="display:inline-block;width:18px;height:6px;border-radius:3px;background:#E8C547;margin:0 2px;vertical-align:middle;"></span>'
+    else:
+        _dots_html += '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#2A2A35;margin:0 2px;vertical-align:middle;"></span>'
 
-# ── 하단 고정 네비 바
-_prev_dis = "disabled" if si == 0 else ""
-_next_dis = "disabled" if si == n_slides - 1 else ""
+_nc1, _nc2, _nc3, _nc4, _nc5 = st.columns([1, 6, 3, 6, 1])
 
-st.markdown(f"""
-<div class="bottom-nav-bar">
-  <button class="bottom-nav-prev {_prev_dis}" onclick="bottomNavClick('prev')" title="이전">‹</button>
-  {_dots_html}
-  <span class="bottom-nav-counter">{si+1} / {n_slides}</span>
-  <button class="bottom-nav-next {_next_dis}" onclick="bottomNavClick('next')" title="다음">›</button>
-</div>
-<script>
-function bottomNavClick(dir) {{
-  var doc = window.parent.document;
-  var btns = doc.querySelectorAll('button');
-  for (var i=0; i<btns.length; i++) {{
-    var txt = btns[i].innerText.trim();
-    if (dir === 'prev' && (txt === '‹' || txt === '\u2039')) {{ btns[i].click(); return; }}
-    if (dir === 'next' && (txt === '›' || txt === '\u203a')) {{ btns[i].click(); return; }}
-  }}
-}}
-</script>
-""", unsafe_allow_html=True)
-
-# ── prev/next 버튼: offscreen CSS, JS에서 고유 텍스트로 탐색
-_hcol1, _hcol2 = st.columns(2)
-with _hcol1:
-    if st.button("PREV_NAV", key="prev_btn", disabled=(si == 0)):
+with _nc1:
+    st.markdown('<div class="bottom-prev-btn">', unsafe_allow_html=True)
+    if st.button("‹", key="prev_btn", disabled=(si == 0), use_container_width=True):
         st.session_state.slide_idx -= 1
         st.rerun()
-with _hcol2:
-    if st.button("NEXT_NAV", key="next_btn", disabled=(si == n_slides - 1)):
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with _nc2:
+    st.markdown(
+        f'<div style="display:flex;align-items:center;justify-content:flex-end;height:42px;padding-right:8px;">{_dots_html}</div>',
+        unsafe_allow_html=True
+    )
+
+with _nc3:
+    st.markdown(
+        f'<div style="display:flex;align-items:center;justify-content:center;height:42px;">' +
+        f'<span style="font-family:IBM Plex Mono,monospace;font-size:13px;font-weight:700;color:#555;">{si+1} / {n_slides}</span></div>',
+        unsafe_allow_html=True
+    )
+
+with _nc4:
+    st.markdown('<div style="height:42px;"></div>', unsafe_allow_html=True)
+
+with _nc5:
+    st.markdown('<div class="bottom-next-btn">', unsafe_allow_html=True)
+    if st.button("›", key="next_btn", disabled=(si == n_slides - 1), use_container_width=True):
         st.session_state.slide_idx += 1
         st.rerun()
-
-# prev/next 버튼 행도 offscreen (두 번째 stHorizontalBlock)
-st.markdown("""
-<style>
-div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
-    position: fixed !important;
-    left: -9998px !important;
-    top: 0px !important;
-    width: 1px !important;
-    pointer-events: auto !important;
-    z-index: 1 !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# ── 점 인디케이터 (하단 바용)
-_dots_html = '<div class="bottom-nav-dots">'
-if n_slides <= 10:
-    for _i in range(n_slides):
-        if _i == si:
-            _dots_html += '<div style="width:20px;height:6px;border-radius:3px;background:#E8C547;flex-shrink:0;"></div>'
-        else:
-            _dots_html += '<div style="width:6px;height:6px;border-radius:50%;background:#2A2A35;flex-shrink:0;"></div>'
-_dots_html += '</div>'
-
-_prev_dis = "disabled" if si == 0 else ""
-_next_dis = "disabled" if si == n_slides - 1 else ""
-
-st.markdown(f"""
-<div class="bottom-nav-bar">
-  <button class="bottom-nav-prev {_prev_dis}" onclick="doNav('prev')" title="이전 슬라이드">‹</button>
-  {_dots_html}
-  <span class="bottom-nav-counter">{si+1} / {n_slides}</span>
-  <button class="bottom-nav-next {_next_dis}" onclick="doNav('next')" title="다음 슬라이드">›</button>
-</div>
-<script>
-function doNav(dir) {{
-  var doc = window.parent.document;
-  var target = dir === 'prev' ? 'PREV_NAV' : 'NEXT_NAV';
-  var btns = doc.querySelectorAll('button');
-  for (var i = 0; i < btns.length; i++) {{
-    if (btns[i].innerText.trim() === target && !btns[i].disabled) {{
-      btns[i].click();
-      return;
-    }}
-  }}
-}}
-function topNavClick(idx) {{
-  var doc = window.parent.document;
-  var labels = {str([s for s in SECTION_KEYS]).replace("'", '"')};
-  var target = labels[parseInt(idx)];
-  if (!target) return;
-  var btns = doc.querySelectorAll('button');
-  for (var i = 0; i < btns.length; i++) {{
-    if (btns[i].innerText.trim() === target) {{
-      btns[i].click();
-      return;
-    }}
-  }}
-}}
-// 키보드 방향키 지원
-(function() {{
-  var doc = window.parent.document;
-  if (!doc._navKeyBound) {{
-    doc.addEventListener('keydown', function(e) {{
-      if (e.key === 'ArrowRight') doNav('next');
-      if (e.key === 'ArrowLeft')  doNav('prev');
-    }});
-    doc._navKeyBound = true;
-  }}
-}})();
-</script>
-""", unsafe_allow_html=True)
-
-
-
-
+    st.markdown("</div>", unsafe_allow_html=True)
