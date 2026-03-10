@@ -72,7 +72,7 @@ div[data-testid="stSelectbox"] svg { fill: #555 !important; }
     border: none !important;
     border-bottom: 2px solid transparent !important;
     border-radius: 0 !important;
-    color: #555 !important;
+    color: #B0ACA4 !important;
     font-size: 12px !important;
     font-weight: 500 !important;
     padding: 8px 10px !important;
@@ -84,8 +84,8 @@ div[data-testid="stSelectbox"] svg { fill: #555 !important; }
     white-space: nowrap !important;
 }
 .top-nav-btn-row .stButton > button:hover {
-    color: #C0BDB4 !important;
-    border-bottom-color: #444 !important;
+    color: #E0DDD5 !important;
+    border-bottom-color: #888 !important;
     background: #1A1A24 !important;
 }
 .top-nav-btn-row-active .stButton > button {
@@ -499,9 +499,9 @@ SECTIONS = {
     "✅ 체크포인트":   ["KPI 요약", "체크포인트 & 리스크", "주가 이벤트"],
     "🏢 기업 개요":    ["기업 정보 & 주주", "제품 포트폴리오"],
     "📡 마켓 포지셔닝":["프로토콜 오너 해자", "SDK & B2B 레퍼런스", "모듈형 vs 수직계열화", "TAM & 채택률", "수혜 4단계 로드맵"],
-    "🔧 파이프라인":   ["제품 로드맵", "파이프라인 현황", "유상증자 자금계획", "QDD & 우즈벡 거점", "테슬라 공급 시나리오", "미국 관세 규제"],
-    "⚔️ 경쟁 분석":    ["경쟁력 비교 레이더", "중국 경쟁사 위협", "K-로봇 재무 비교"],
-    "📈 실적 추이":    ["실적 & 재무건전성"],
+    "🔧 파이프라인":   ["파이프라인 현황", "제품 로드맵", "유상증자 자금계획", "QDD & 우즈벡 거점", "테슬라 공급 시나리오", "미국 관세 규제"],
+    "⚔️ 경쟁 분석":    ["경쟁력 비교 레이더", "중국 경쟁사 위협"],
+    "📈 실적 추이":    ["연간실적 & 국가별 매출"],
     "💰 밸류에이션":   ["밸류에이션 지표"],
 }
 SECTION_KEYS = list(SECTIONS.keys())
@@ -521,7 +521,7 @@ if "pl_checked" not in st.session_state:
 # ════════════════════════════════════════════════════
 #  버전 정보 & 실시간 주가
 # ════════════════════════════════════════════════════
-APP_VERSION = "v2.5"
+APP_VERSION = "v2.6"
 APP_UPDATED = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 @st.cache_data(ttl=3600)   # 1시간 캐시 (과호출 방지)
@@ -551,10 +551,10 @@ if _price:
         f'<span style="color:#E8C547;font-weight:700;">{_price:,}원</span>'
         f'&nbsp;<span style="color:{_chg_color};font-size:10px;">'
         f'{_chg_sign}{abs(_chg):.2f}%</span>'
-        f'&nbsp;<span style="color:#333;font-size:10px;">({_price_date} 종가)</span>'
+        f'&nbsp;<span style="color:#666;font-size:10px;">({_price_date} 종가)</span>'
     )
 else:
-    _price_html = '<span style="color:#555;">주가 로딩 중…</span>'
+    _price_html = '<span style="color:#999;">주가 로딩 중…</span>'
 
 # ════════════════════════════════════════════════════
 #  상단 헤더 + 섹션 탭 (Streamlit 네이티브 — JS 없음)
@@ -568,14 +568,14 @@ st.markdown(f"""
                 border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;">🤖</div>
     <div>
       <span style="font-size:14px;font-weight:700;color:#E0DDD5;">로보티즈 IR 2026</span>
-      <span style="font-size:11px;color:#444;font-family:'IBM Plex Mono',monospace;margin-left:8px;">108490 · KOSDAQ</span>
+      <span style="font-size:11px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;margin-left:8px;">108490 · KOSDAQ</span>
     </div>
   </div>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right;line-height:1.8;">
     {_price_html}<br>
-    <span style="color:#444;">{APP_VERSION}</span>
-    <span style="color:#2A2A35;">&nbsp;·&nbsp;</span>
-    <span style="color:#333;">업데이트 {APP_UPDATED}</span>
+    <span style="color:#888;">{APP_VERSION}</span>
+    <span style="color:#999;">&nbsp;·&nbsp;</span>
+    <span style="color:#B0ACA4;">업데이트 {APP_UPDATED}</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -617,7 +617,7 @@ def kv_row(k, v, vc="#C0BDB4"):
     return f"""
     <div style="display:flex;justify-content:space-between;align-items:center;
                 padding:8px 0;border-bottom:1px solid #1E1E28;">
-      <span style="font-size:14px;color:#666;">{k}</span>
+      <span style="font-size:14px;color:#B0ACA4;">{k}</span>
       <span style="font-size:14px;font-weight:600;color:{vc};font-family:'IBM Plex Mono',monospace;">{v}</span>
     </div>"""
 
@@ -645,9 +645,9 @@ def slide_kpi():
             st.markdown(f"""
             <div style="background:#18181E;border:1px solid #22222A;border-radius:10px;
                         padding:16px;border-top:2px solid {color};">
-              <div style="font-size:11px;color:#444;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;margin-bottom:8px;">{label.upper()}</div>
+              <div style="font-size:11px;color:#888;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;margin-bottom:8px;">{label.upper()}</div>
               <div style="font-size:26px;font-weight:700;color:{color};">{value}</div>
-              <div style="font-size:13px;color:#555;margin-top:4px;">{sub}</div>
+              <div style="font-size:13px;color:#999;margin-top:4px;">{sub}</div>
             </div>""", unsafe_allow_html=True)
 
     st.markdown("<div style='height:14px'/>", unsafe_allow_html=True)
@@ -669,10 +669,10 @@ def slide_checkpoint_risk():
                 val = st.checkbox("", value=done, key=f"cp_{i}")
                 st.session_state.cp_checked[i] = val
             with col_txt:
-                s = "text-decoration:line-through;color:#444;" if val else "color:#C0BDB4;"
+                s = "text-decoration:line-through;color:#888;" if val else "color:#C0BDB4;"
                 st.markdown(f"""
                 <div style="{s}font-size:16px;margin-bottom:2px;margin-top:2px;">{cp['icon']} {cp['label']}</div>
-                <div style="font-size:14px;color:#555;line-height:1.4;">{cp['note']}</div>
+                <div style="font-size:14px;color:#999;line-height:1.4;">{cp['note']}</div>
                 """, unsafe_allow_html=True)
     with c2:
         st.markdown('<div style="font-size:15px;color:#FF8C69;font-weight:600;margin-bottom:10px;">⚠️ 리스크 요인</div>', unsafe_allow_html=True)
@@ -690,7 +690,7 @@ def slide_price_events():
         dc = "#4EC9B0" if "↑" in ev["dir"] or "▲" in ev["dir"] else "#FF8C69"
         ev_html += f"""
         <div style="width:140px;padding:12px;background:#0D0D12;border-radius:8px;border:1px solid #1E1E28;">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#555;margin-bottom:6px;">{ev['date']}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#999;margin-bottom:6px;">{ev['date']}</div>
           <div style="font-size:15px;color:#B0ACA4;line-height:1.5;margin-bottom:6px;">{ev['event']}</div>
           <div style="font-size:14px;color:{dc};">{ev['dir']}</div>
         </div>"""
@@ -725,7 +725,7 @@ def slide_company_info():
         kv = [("설립","1999.04"),("대표","김병수"),("상장","2018년 코스닥"),("임직원","약 114명"),("수출 비중","약 70%+"),("미국법인","ROBOTIS Inc.")]
         html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">'
         for k,v in kv:
-            html += f'<div style="background:#0D0D12;border-radius:6px;padding:8px 10px;"><div style="font-size:14px;color:#444;margin-bottom:2px;">{k}</div><div style="font-size:16px;color:#C0BDB4;font-weight:500;">{v}</div></div>'
+            html += f'<div style="background:#0D0D12;border-radius:6px;padding:8px 10px;"><div style="font-size:14px;color:#888;margin-bottom:2px;">{k}</div><div style="font-size:16px;color:#C0BDB4;font-weight:500;">{v}</div></div>'
         html += "</div>"
         st.markdown(html, unsafe_allow_html=True)
 
@@ -744,7 +744,7 @@ def slide_company_info():
                 <span style="font-family:'IBM Plex Mono',monospace;color:{s['color']};font-size:16px;">{s['pct']}</span>
               </div>
               {prog_bar(s['pv'], s['color'])}
-              <div style="font-size:14px;color:#555;">{s['role']}</div>
+              <div style="font-size:14px;color:#999;">{s['role']}</div>
             </div>""", unsafe_allow_html=True)
         st.markdown("""
         <div style="background:#0F1F18;border-radius:8px;padding:10px 12px;font-size:15px;color:#4EC9B0;line-height:1.7;margin-top:8px;">
@@ -769,9 +769,9 @@ def slide_portfolio():
                 <span style="font-weight:700;font-size:18px;color:{p['bc']};">{p['name']}</span>
                 {badge(p['badge'], p['bc'])}
               </div>
-              <div style="font-size:14px;color:#666;margin-bottom:6px;">{p['sub']}</div>
+              <div style="font-size:14px;color:#B0ACA4;margin-bottom:6px;">{p['sub']}</div>
               <div style="font-size:14px;font-family:'IBM Plex Mono',monospace;color:{p['bc']};margin-bottom:8px;">{p['status']}</div>
-              <div style="font-size:15px;color:#666;line-height:1.5;">{p['desc']}</div>
+              <div style="font-size:15px;color:#B0ACA4;line-height:1.5;">{p['desc']}</div>
             </div>""", unsafe_allow_html=True)
 
     st.markdown("<div style='height:14px'/>", unsafe_allow_html=True)
@@ -832,7 +832,7 @@ def slide_protocol_moat():
               <div style="font-size:14px;font-weight:700;color:{d['color']};margin-bottom:12px;">{d['icon']} {d['title']}</div>
               <div style="margin-bottom:10px;">
                 <div style="font-size:13px;color:#FF8C69;font-weight:600;margin-bottom:4px;">일반 부품사</div>
-                <div style="font-size:13px;color:#666;line-height:1.6;">{d['generic']}</div>
+                <div style="font-size:13px;color:#B0ACA4;line-height:1.6;">{d['generic']}</div>
               </div>
               <div style="margin-bottom:10px;">
                 <div style="font-size:13px;color:#4EC9B0;font-weight:600;margin-bottom:4px;">로보티즈</div>
@@ -865,7 +865,7 @@ def slide_sdk_reference():
             </div>""", unsafe_allow_html=True)
         st.markdown("""
         <div style="margin-top:12px;background:#0F1218;border:1px solid #1E2A1E;border-radius:8px;padding:10px 14px;
-                    font-size:13px;color:#555;line-height:1.7;">
+                    font-size:13px;color:#999;line-height:1.7;">
           💡 피지컬 AI 시뮬레이터(Isaac Lab·MuJoCo)에서 학습한 정책이
           <b style="color:#E0DDD5;">그대로 DYNAMIXEL 하드웨어에서 실행</b>됩니다.
           Sim-to-Real 갭이 가장 좁은 액추에이터.
@@ -897,7 +897,7 @@ def slide_sdk_reference():
                 st.markdown(f"""
                 <div style="display:flex;gap:10px;margin-bottom:6px;padding-left:10px;border-left:2px solid {g['color']}44;">
                   <span style="font-size:13px;color:#C0BDB4;font-weight:500;flex-shrink:0;min-width:110px;">{r['name']}</span>
-                  <span style="font-size:13px;color:#666;line-height:1.6;">{r['detail']}</span>
+                  <span style="font-size:13px;color:#B0ACA4;line-height:1.6;">{r['detail']}</span>
                 </div>""", unsafe_allow_html=True)
 
 def slide_modular_vs_vertical():
@@ -927,10 +927,10 @@ def slide_modular_vs_vertical():
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
                 <div>
                   <div style="font-size:15px;font-weight:700;color:{a['color']};margin-bottom:4px;">{a['type']}</div>
-                  <div style="font-size:14px;color:#666;">{a['champion']}</div>
+                  <div style="font-size:14px;color:#B0ACA4;">{a['champion']}</div>
                 </div>
                 <div style="text-align:right;">
-                  <div style="font-size:13px;color:#555;margin-bottom:2px;">현재 점유(추정)</div>
+                  <div style="font-size:13px;color:#999;margin-bottom:2px;">현재 점유(추정)</div>
                   <div style="font-size:14px;font-weight:700;color:{a['color']};font-family:'IBM Plex Mono',monospace;">{a['share25']}%</div>
                 </div>
               </div>
@@ -976,7 +976,7 @@ def slide_tam():
         fig.update_layout(margin=dict(l=40, r=10, t=10, b=50))
         st.plotly_chart(fig, use_container_width=True)
         st.markdown("""
-        <div style="font-size:13px;color:#444;line-height:1.7;margin-top:4px;">
+        <div style="font-size:13px;color:#888;line-height:1.7;margin-top:4px;">
           * 글로벌 시장 성장에도 채택률(%)은 수직계열화로 점진 하락 —<br>
           TAM 절대값은 성장하나 <b style="color:#E8C547;">점유율 방어</b>가 핵심 변수
         </div>""", unsafe_allow_html=True)
@@ -996,7 +996,7 @@ def slide_tam():
         fig2.update_layout(margin=dict(l=40, r=10, t=10, b=50))
         st.plotly_chart(fig2, use_container_width=True)
         st.markdown("""
-        <div style="font-size:13px;color:#444;line-height:1.7;margin-top:4px;">
+        <div style="font-size:13px;color:#888;line-height:1.7;margin-top:4px;">
           * 연구용 비중 감소 + 상업화 비중 확대 —<br>
           <b style="color:#4EC9B0;">초기상업화 구간(2025~2028)</b>이 로보티즈 모듈형 수요 피크
         </div>""", unsafe_allow_html=True)
@@ -1036,13 +1036,13 @@ def slide_pacemaker():
             <div style="font-size:14px;color:#C0BDB4;font-weight:600;line-height:1.5;">{pm['title']}</div>
           </div>
           <div>
-            <div style="font-size:13px;color:#555;font-weight:600;margin-bottom:4px;">시장 구도</div>
+            <div style="font-size:13px;color:#999;font-weight:600;margin-bottom:4px;">시장 구도</div>
             <div style="font-size:14px;color:#888;line-height:1.7;">{pm['desc']}</div>
           </div>
           <div>
             <div style="font-size:13px;color:{pm['color']};font-weight:600;margin-bottom:4px;">로보티즈 전략 포인트</div>
             <div style="font-size:14px;color:#888;line-height:1.7;margin-bottom:6px;">{pm['robotis']}</div>
-            <div style="font-size:13px;color:#444;font-family:'IBM Plex Mono',monospace;">📌 KPI: {pm['kpi']}</div>
+            <div style="font-size:13px;color:#888;font-family:'IBM Plex Mono',monospace;">📌 KPI: {pm['kpi']}</div>
           </div>
         </div>""", unsafe_allow_html=True)
 
@@ -1226,7 +1226,7 @@ def slide_tesla():
       <span style="font-size:26px;flex-shrink:0;">⚡</span>
       <div>
         <div style="font-size:16px;font-weight:700;color:#E8C547;margin-bottom:4px;">테슬라 옵티머스 액추에이터 공급 — 파이프라인 최대 카탈리스트</div>
-        <div style="font-size:14px;color:#666;">확정 시 로보티즈 밸류에이션 전면 재정의 수준. 현재 협의 여부 미공개.</div>
+        <div style="font-size:14px;color:#B0ACA4;">확정 시 로보티즈 밸류에이션 전면 재정의 수준. 현재 협의 여부 미공개.</div>
       </div>
     </div>""", unsafe_allow_html=True)
 
@@ -1279,9 +1279,9 @@ def slide_tesla():
                 <span style="font-size:13px;background:{s['color']}22;color:{s['color']};padding:2px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;">P≈{s['prob']}</span>
               </div>
               <div style="font-size:14px;color:#C0BDB4;font-weight:600;margin-bottom:8px;line-height:1.5;">{s['title']}</div>
-              <div style="font-size:14px;color:#666;line-height:1.6;margin-bottom:6px;"><span style="color:#888;">조건: </span>{s['cond']}</div>
-              <div style="font-size:14px;color:#666;line-height:1.6;margin-bottom:6px;"><span style="color:{s['color']}">임팩트: </span>{s['impact']}</div>
-              <div style="font-size:13px;color:#444;font-family:'IBM Plex Mono',monospace;">⏱ {s['timeline']}</div>
+              <div style="font-size:14px;color:#B0ACA4;line-height:1.6;margin-bottom:6px;"><span style="color:#888;">조건: </span>{s['cond']}</div>
+              <div style="font-size:14px;color:#B0ACA4;line-height:1.6;margin-bottom:6px;"><span style="color:{s['color']}">임팩트: </span>{s['impact']}</div>
+              <div style="font-size:13px;color:#888;font-family:'IBM Plex Mono',monospace;">⏱ {s['timeline']}</div>
             </div>""", unsafe_allow_html=True)
 
     st.markdown('<div style="height:10px"/>', unsafe_allow_html=True)
@@ -1302,7 +1302,7 @@ def slide_tesla():
           <div style="font-size:14px;color:#777;line-height:1.6;">{d}</div>
         </div>""", unsafe_allow_html=True)
     st.markdown("""</div>
-      <div style="margin-top:8px;font-size:13px;color:#444;border-top:1px solid #1A2A1A;padding-top:8px;">
+      <div style="margin-top:8px;font-size:13px;color:#888;border-top:1px solid #1A2A1A;padding-top:8px;">
         ⚠️ 본 시나리오는 공개 정보 기반 추정이며 로보티즈-테슬라 간 공식 계약 여부는 미확인입니다.
       </div>
     </div>""", unsafe_allow_html=True)
@@ -1316,7 +1316,7 @@ def slide_tariff():
       <span style="font-size:26px;flex-shrink:0;">⚖️</span>
       <div>
         <div style="font-size:16px;font-weight:700;color:#7B9FFF;margin-bottom:4px;">팩트체크: 미국 내 중국산 로봇 부품 규제 현황 (2026.03 기준)</div>
-        <div style="font-size:14px;color:#666;">규제 강화는 로보티즈의 지정학적 해자 — 단, 현재는 "조사 중" 단계임에 주의</div>
+        <div style="font-size:14px;color:#B0ACA4;">규제 강화는 로보티즈의 지정학적 해자 — 단, 현재는 "조사 중" 단계임에 주의</div>
       </div>
     </div>""", unsafe_allow_html=True)
 
@@ -1426,7 +1426,7 @@ def slide_pipeline():
                 {badge(p['stage'], p['stageColor'])}
               </div>
               <div style="font-size:15px;color:#777;line-height:1.55;margin-bottom:5px;">{p['detail']}</div>
-              <div style="display:flex;gap:14px;font-size:14px;color:#555;flex-wrap:wrap;">
+              <div style="display:flex;gap:14px;font-size:14px;color:#999;flex-wrap:wrap;">
                 <span>🎯 {p['target']}</span>
                 <span style="color:{p['stageColor']};">💰 {p['rev']}</span>
                 <span style="color:#FF8C69;">⚠️ {p['risk']}</span>
@@ -1458,7 +1458,7 @@ def slide_china_rivals():
           <!-- 기업 정보 -->
           <div>
             <div style="font-size:15px;font-weight:700;color:#E0DDD5;margin-bottom:2px;">{r['country']} {r['name']}</div>
-            <div style="font-size:14px;color:#555;margin-bottom:5px;">{r['city']}</div>
+            <div style="font-size:14px;color:#999;margin-bottom:5px;">{r['city']}</div>
             <div style="display:inline-block;background:{r['tc']}22;color:{r['tc']};font-size:13px;
                         padding:2px 7px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:5px;">
               위협도 {r['threat']}
@@ -1543,15 +1543,15 @@ def slide_krobot():
                         border:1px solid {c['color']}33;border-top:3px solid {c['color']};">
               <div style="font-size:16px;font-weight:700;color:{c['color']};margin-bottom:10px;">{c['name']}</div>
               <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
-                <span style="font-size:14px;color:#555;">시총</span>
+                <span style="font-size:14px;color:#999;">시총</span>
                 <span style="font-size:14px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['cap']}조</span>
               </div>
               <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
-                <span style="font-size:14px;color:#555;">매출(E)</span>
+                <span style="font-size:14px;color:#999;">매출(E)</span>
                 <span style="font-size:14px;color:#B0ACA4;font-family:'IBM Plex Mono',monospace;">{c['rev25']}억</span>
               </div>
               <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E1E28;">
-                <span style="font-size:14px;color:#555;">영업이익(E)</span>
+                <span style="font-size:14px;color:#999;">영업이익(E)</span>
                 <span style="font-size:14px;color:{oc};font-family:'IBM Plex Mono',monospace;font-weight:600;">{os}</span>
               </div>
               <div style="margin-top:8px;background:{c['color']}15;color:{c['color']};border-radius:4px;
@@ -1581,9 +1581,9 @@ def slide_krobot():
 
 
 def slide_perf_combined():
-    """연간 실적 + 재무건전성 레이더 + 국가별/고객별 매출"""
-    # ── 상단: 연간실적 | 재무레이더
+    """연간 실적 + 국가별 매출 비중"""
     c1, c2 = st.columns(2)
+
     with c1:
         st.markdown(sec_lbl("📊","연간 실적 추이 (억원)"), unsafe_allow_html=True)
         rev_c = ["#E8C547" if i < 4 else "rgba(232,197,71,0.45)" for i in range(len(revenue_data))]
@@ -1592,99 +1592,71 @@ def slide_perf_combined():
         fig.add_bar(x=revenue_data["year"], y=revenue_data["rev"], name="매출액", marker_color=rev_c)
         fig.add_bar(x=revenue_data["year"], y=revenue_data["op"],  name="영업이익", marker_color=op_c)
         fig.add_hline(y=0, line_color="#333")
-        fig.update_layout(**DT, height=200, barmode="group",
-                          legend=dict(orientation="h", y=-0.30))
+        fig.update_layout(**DT, height=240, barmode="group",
+                          legend=dict(orientation="h", y=-0.28, font=dict(color="#E0DDD5")))
         st.plotly_chart(fig, use_container_width=True)
 
+        # OPM 선 차트
         fig2 = go.Figure()
-        fig2.add_scatter(x=revenue_data["year"], y=revenue_data["opM"],
-                         mode="lines+markers",
-                         line=dict(color="#E8C547", width=2),
-                         marker=dict(size=7, color=["#FF8C69" if v < 0 else "#4EC9B0" for v in revenue_data["opM"]]),
-                         fill="toself", fillcolor="rgba(232,197,71,0.06)")
+        fig2.add_scatter(
+            x=revenue_data["year"], y=revenue_data["opM"],
+            mode="lines+markers",
+            line=dict(color="#E8C547", width=2),
+            marker=dict(size=7, color=["#FF8C69" if v < 0 else "#4EC9B0" for v in revenue_data["opM"]]),
+            fill="toself", fillcolor="rgba(232,197,71,0.06)"
+        )
         fig2.add_hline(y=0, line_color="#333", line_dash="dash")
         fig2.update_layout(**DT, height=160,
-                           yaxis=dict(title="OPM %", color="#555"),
-                           xaxis=dict(color="#555"))
+                           yaxis=dict(title="OPM %", color="#B0ACA4", tickfont=dict(color="#B0ACA4")),
+                           xaxis=dict(color="#B0ACA4", tickfont=dict(color="#B0ACA4")))
         st.plotly_chart(fig2, use_container_width=True)
 
-    with c2:
-        st.markdown(sec_lbl("🕸️","재무 건전성 레이더"), unsafe_allow_html=True)
-        cats_r = radar_data["subject"] + [radar_data["subject"][0]]
-        vals_r = radar_data["value"]   + [radar_data["value"][0]]
-        fig3 = go.Figure(go.Scatterpolar(
-            r=vals_r, theta=cats_r,
-            fill="toself", fillcolor="rgba(232,197,71,0.12)",
-            line=dict(color="#E8C547", width=2), name="로보티즈"
-        ))
-        fig3.update_layout(**DT, height=290,
-                           polar=dict(bgcolor="#18181E",
-                                      radialaxis=dict(visible=True, range=[0,100], color="#333"),
-                                      angularaxis=dict(color="#555")))
-        st.plotly_chart(fig3, use_container_width=True)
-
+        # 요약 표
         rows = [("매출액(억)","291","300","420"),
                 ("YoY(%)","11.8","3.1","40"),
                 ("영업이익(억)","-53","-30","+52"),
                 ("OPM(%)","-18.2","-10.0","+12.4")]
         th = "<tr>" + "".join(
-            f'<th style="text-align:right;color:#555;font-size:12px;padding:4px 6px;border-bottom:1px solid #22222A;">{h}</th>'
+            f'<th style="text-align:right;color:#B0ACA4;font-size:12px;padding:4px 6px;border-bottom:1px solid #22222A;">{h}</th>'
             for h in ["구분","2023","2024","2025E"]
         ) + "</tr>"
         trs = ""
         for r in rows:
-            tds = f'<td style="font-size:12px;color:#666;padding:4px 6px;border-bottom:1px solid #18181E;">{r[0]}</td>'
+            tds = f'<td style="font-size:12px;color:#B0ACA4;padding:4px 6px;border-bottom:1px solid #18181E;">{r[0]}</td>'
             for v in r[1:]:
-                vc = "#FF8C69" if v.startswith("-") else "#4EC9B0" if v.startswith("+") else "#B0ACA4"
+                vc = "#FF8C69" if v.startswith("-") else "#4EC9B0" if v.startswith("+") else "#E0DDD5"
                 tds += f'<td style="text-align:right;font-size:12px;color:{vc};font-family:IBM Plex Mono,monospace;padding:4px 6px;border-bottom:1px solid #18181E;">{v}</td>'
             trs += f"<tr>{tds}</tr>"
         st.markdown(f'<table style="width:100%;border-collapse:collapse;margin-top:8px;">{th}{trs}</table>', unsafe_allow_html=True)
 
-    st.markdown("<hr style='border:none;border-top:1px solid #1E1E28;margin:14px 0 10px'/>", unsafe_allow_html=True)
-
-    # ── 하단: 국가별 매출 | B2B 주요 고객
-    g1, g2 = st.columns(2)
-    with g1:
+    with c2:
         st.markdown(sec_lbl("🌍","국가별 매출 비중 (2024)"), unsafe_allow_html=True)
-        fig4 = go.Figure(go.Pie(
+        _dt_pie = dict(DT)
+        _dt_pie["margin"] = dict(l=0, r=0, t=10, b=0)
+        fig3 = go.Figure(go.Pie(
             labels=geo_data["country"],
             values=geo_data["pct"],
-            hole=0.52,
+            hole=0.5,
             marker_colors=geo_data["color"].tolist(),
-            textfont_size=12,
+            textfont=dict(size=13, color="#E0DDD5"),
             textinfo="label+percent",
         ))
-        _dt4 = {k: v for k, v in DT.items()}
-        _dt4["margin"] = dict(l=0, r=0, t=10, b=0)
-        fig4.update_layout(**_dt4, height=220, showlegend=False)
-        fig4.update_layout(annotations=[
+        fig3.update_layout(**_dt_pie, height=260, showlegend=False)
+        fig3.update_layout(annotations=[
             dict(text="수출<br>72%+", x=0.5, y=0.5, showarrow=False,
-                 font=dict(size=11, color="#888"), xanchor="center", yanchor="middle")
+                 font=dict(size=12, color="#B0ACA4"), xanchor="center", yanchor="middle")
         ])
-        st.plotly_chart(fig4, use_container_width=True)
-        # 국가별 노트
+        st.plotly_chart(fig3, use_container_width=True)
+
+        # 국가별 노트 목록
         for g in geo_data.itertuples():
             st.markdown(
-                f'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">' +
-                f'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:{g.color};flex-shrink:0;"></span>' +
-                f'<span style="font-size:12px;color:#666;">{g.country} <span style="color:#444;">— {g.note}</span></span></div>',
+                f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">' +
+                f'<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:{g.color};flex-shrink:0;"></span>' +
+                f'<span style="font-size:13px;color:#E0DDD5;font-weight:600;">{g.country}</span>' +
+                f'<span style="font-size:12px;color:#B0ACA4;">— {g.note}</span></div>',
                 unsafe_allow_html=True
             )
-
-    with g2:
-        st.markdown(sec_lbl("📰","관련 주요 기사·공시"), unsafe_allow_html=True)
-        for n in b2b_news:
-            st.markdown(f"""
-            <div style="background:#18181E;border:1px solid #22222A;border-left:3px solid {n['color']};
-                        border-radius:6px;padding:7px 10px;margin-bottom:5px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-                <span style="font-size:11px;color:#444;font-family:IBM Plex Mono,monospace;">{n['date']} · {n['src']}</span>
-                <span style="font-size:10px;background:{n['color']}22;color:{n['color']};
-                             padding:1px 6px;border-radius:3px;white-space:nowrap;">{n['tag']}</span>
-              </div>
-              <div style="font-size:12px;color:#B0ACA4;line-height:1.55;">{n['title']}</div>
-            </div>""", unsafe_allow_html=True)
-
 # ─── 실적 추이 ────────────────────────────────────────
 def slide_annual():
     c1, c2 = st.columns(2)
@@ -1702,10 +1674,10 @@ def slide_annual():
 
         rows = [("매출액(억)","291","300","420"),("YoY(%)","11.8","3.1","40"),
                 ("영업이익(억)","-53","-30","+52"),("OPM(%)","-18.2","-10.0","+12.4")]
-        th = '<tr>' + ''.join(f'<th style="text-align:right;color:#555;font-size:14px;padding:5px 4px;border-bottom:1px solid #22222A;">{h}</th>' for h in ["구분","2023","2024","2025E"]) + '</tr>'
+        th = '<tr>' + ''.join(f'<th style="text-align:right;color:#999;font-size:14px;padding:5px 4px;border-bottom:1px solid #22222A;">{h}</th>' for h in ["구분","2023","2024","2025E"]) + '</tr>'
         trs = ""
         for r in rows:
-            tds = f'<td style="font-size:15px;color:#666;padding:5px 4px;border-bottom:1px solid #18181E;">{r[0]}</td>'
+            tds = f'<td style="font-size:15px;color:#B0ACA4;padding:5px 4px;border-bottom:1px solid #18181E;">{r[0]}</td>'
             for v in r[1:]:
                 vc = "#FF8C69" if v.startswith("-") else "#4EC9B0" if v.startswith("+") else "#B0ACA4"
                 tds += f'<td style="text-align:right;font-size:15px;color:{vc};font-family:\'IBM Plex Mono\',monospace;padding:5px 4px;border-bottom:1px solid #18181E;">{v}</td>'
@@ -1724,7 +1696,7 @@ def slide_annual():
         st.plotly_chart(fig2, use_container_width=True)
 
         st.markdown("""
-        <div style="font-size:15px;color:#555;line-height:1.75;margin-top:4px;">
+        <div style="font-size:15px;color:#999;line-height:1.75;margin-top:4px;">
           ● 2025년 1분기부터 4분기 연속 흑자 달성.<br>
           ● 4Q25 매출 116억원, 영업이익 21억 — 액추에이터 OPM <b style="color:#4EC9B0;">36%</b> 역대 최고.
         </div>""", unsafe_allow_html=True)
@@ -1758,6 +1730,7 @@ def slide_radar_perf():
 
 # ─── 밸류에이션 ───────────────────────────────────────
 def slide_valuation():
+    # ── 상단: 밸류에이션 지표 | 동종업종 비교
     c1, c2 = st.columns(2)
     with c1:
         st.markdown(sec_lbl("💰","밸류에이션 지표"), unsafe_allow_html=True)
@@ -1768,19 +1741,53 @@ def slide_valuation():
 
     with c2:
         st.markdown(sec_lbl("📊","동종업종 밸류에이션 비교"), unsafe_allow_html=True)
-        th = '<tr>' + ''.join(f'<th style="text-align:center;color:#555;font-size:14px;padding:6px 4px;border-bottom:1px solid #22222A;">{h}</th>' for h in ["기업명","시총","PSR(25E)","PBR(25E)"]) + '</tr>'
+        th = "<tr>" + "".join(
+            f'<th style="text-align:center;color:#B0ACA4;font-size:13px;padding:6px 4px;border-bottom:1px solid #22222A;">{h}</th>'
+            for h in ["기업명","시총","PSR(25E)","PBR(25E)"]
+        ) + "</tr>"
         trs = ""
         for i, p in enumerate(peers):
-            bg = "#1E1E0A" if i==0 else "transparent"
+            bg = "#1E1E0A" if i == 0 else "transparent"
             trs += f'<tr style="background:{bg};">'
-            trs += f'<td style="padding:7px 4px;color:{p["color"]};font-weight:{"700" if i==0 else "400"};font-size:15px;border-bottom:1px solid #18181E;">{p["name"]}</td>'
-            for val in [p["cap"],p["psr25"],p["pbr25"]]:
-                vc = "#FF8C69" if (i==0 and val not in ["3.67조","N/A"]) else "#888"
-                trs += f'<td style="text-align:center;color:{vc};font-family:\'IBM Plex Mono\',monospace;font-size:14px;padding:7px 4px;border-bottom:1px solid #18181E;">{val}</td>'
+            trs += (
+                f'<td style="padding:6px 4px;color:{p["color"]};font-weight:{"700" if i==0 else "400"};'
+                f'font-size:14px;border-bottom:1px solid #18181E;">{p["name"]}</td>'
+            )
+            for val in [p["cap"], p["psr25"], p["pbr25"]]:
+                vc = "#FF8C69" if (i == 0 and val not in ["3.67조","N/A"]) else "#E0DDD5"
+                trs += (
+                    f'<td style="text-align:center;color:{vc};font-family:IBM Plex Mono,monospace;'
+                    f'font-size:13px;padding:6px 4px;border-bottom:1px solid #18181E;">{val}</td>'
+                )
             trs += "</tr>"
         st.markdown(f'<table style="width:100%;border-collapse:collapse;">{th}{trs}</table>', unsafe_allow_html=True)
 
+    st.markdown("<hr style='border:none;border-top:1px solid #1E1E28;margin:12px 0 8px'/>", unsafe_allow_html=True)
 
+    # ── 하단: K-로봇 빅4 재무 카드
+    st.markdown(sec_lbl("📈","K-로봇 빅4 재무 비교 (2025E)"), unsafe_allow_html=True)
+    k_cols = st.columns(4)
+    for col, c in zip(k_cols, comp_data):
+        oc = "#4EC9B0" if c["op25"] > 0 else "#FF8C69"
+        os_str = f"+{c['op25']}억" if c["op25"] > 0 else f"{c['op25']}억"
+        with col:
+            st.markdown(f"""
+            <div style="background:#0D0D12;border-radius:8px;padding:12px 10px;
+                        border:1px solid {c['color']}33;border-top:3px solid {c['color']};">
+              <div style="font-size:14px;font-weight:700;color:{c['color']};margin-bottom:8px;">{c['name']}</div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1E1E28;">
+                <span style="font-size:13px;color:#B0ACA4;">시총</span>
+                <span style="font-size:13px;color:#E0DDD5;font-family:IBM Plex Mono,monospace;">{c['cap']}조</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1E1E28;">
+                <span style="font-size:13px;color:#B0ACA4;">매출(E)</span>
+                <span style="font-size:13px;color:#E0DDD5;font-family:IBM Plex Mono,monospace;">{c['rev25']}억</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                <span style="font-size:13px;color:#B0ACA4;">영업이익(E)</span>
+                <span style="font-size:13px;color:{oc};font-family:IBM Plex Mono,monospace;font-weight:600;">{os_str}</span>
+              </div>
+            </div>""", unsafe_allow_html=True)
 
 def slide_opinion():
     st.markdown("""
@@ -1823,7 +1830,7 @@ def slide_opinion():
                 <span style="font-size:14px;background:{s['color']}22;color:{s['color']};padding:2px 7px;border-radius:4px;font-family:'IBM Plex Mono',monospace;">P≈{s['prob']}</span>
               </div>
               <div style="font-size:15px;color:#C0BDB4;font-weight:600;margin-bottom:6px;line-height:1.45;">{s['title']}</div>
-              <div style="font-size:14px;color:#666;line-height:1.6;">{s['impact']}</div>
+              <div style="font-size:14px;color:#B0ACA4;line-height:1.6;">{s['impact']}</div>
             </div>""", unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════
@@ -1848,8 +1855,7 @@ SLIDE_RENDERERS = {
     "파이프라인 현황":       slide_pipeline,
     "중국 경쟁사 위협":      slide_china_rivals,
     "경쟁력 비교 레이더":    slide_radar_diff,
-    "K-로봇 재무 비교":     slide_krobot,
-    "실적 & 재무건전성":     slide_perf_combined,
+    "연간실적 & 국가별 매출": slide_perf_combined,
     "밸류에이션 지표":       slide_valuation,
 }
 
@@ -1862,14 +1868,14 @@ _topbar = f"""
 <div class="slide-frame">
   <div class="slide-topbar">
     <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-      <div style="font-size:12px;color:#444;font-family:'IBM Plex Mono',monospace;
+      <div style="font-size:12px;color:#888;font-family:'IBM Plex Mono',monospace;
                   white-space:nowrap;">{cur_sec}</div>
       <span style="color:#2A2A35;">›</span>
       <div style="font-size:15px;font-weight:700;color:#E8C547;
                   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{cur_slide}</div>
     </div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;
-                color:#555;flex-shrink:0;">{si+1}&thinsp;/&thinsp;{n_slides}</div>
+                color:#B0ACA4;flex-shrink:0;">{si+1}&thinsp;/&thinsp;{n_slides}</div>
   </div>
   <div class="slide-body">
 """
@@ -1908,7 +1914,7 @@ with _nc3:
     st.markdown(
         f'<div style="display:flex;align-items:center;justify-content:center;gap:10px;height:44px;">' +
         f'<span style="display:flex;align-items:center;gap:4px;">{_dots_html}</span>' +
-        f'<span style="font-family:IBM Plex Mono,monospace;font-size:12px;color:#555;white-space:nowrap;">{si+1} / {n_slides}</span>' +
+        f'<span style="font-family:IBM Plex Mono,monospace;font-size:12px;color:#999;white-space:nowrap;">{si+1} / {n_slides}</span>' +
         '</div>',
         unsafe_allow_html=True
     )
