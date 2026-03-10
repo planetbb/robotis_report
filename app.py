@@ -103,32 +103,35 @@ div[data-testid="stSelectbox"] svg { fill: #555 !important; }
     box-shadow: none !important;
 }
 
-/* ── 하단 네비 prev/next 버튼 ── */
+/* ── 하단 네비 prev/next 버튼 — 색상 반전 (잘 보이게) ── */
 .bottom-prev-btn .stButton > button,
 .bottom-next-btn .stButton > button {
-    background: #1A1A24 !important;
-    border: 1px solid #2A2A38 !important;
+    background: #E8C547 !important;
+    border: none !important;
     border-radius: 8px !important;
-    color: #888 !important;
+    color: #0A0A0C !important;
     font-size: 22px !important;
-    font-weight: 400 !important;
+    font-weight: 700 !important;
     line-height: 1 !important;
     width: 100% !important;
     min-height: 42px !important;
     height: 42px !important;
     padding: 0 !important;
-    box-shadow: none !important;
-    transition: all .2s !important;
+    box-shadow: 0 2px 8px rgba(232,197,71,0.35) !important;
+    transition: all .15s !important;
 }
 .bottom-prev-btn .stButton > button:hover,
 .bottom-next-btn .stButton > button:hover {
-    background: #22223A !important;
-    border-color: #E8C547 !important;
-    color: #E8C547 !important;
+    background: #F5D76E !important;
+    box-shadow: 0 4px 14px rgba(232,197,71,0.5) !important;
+    transform: scale(1.04) !important;
 }
 .bottom-prev-btn .stButton > button:disabled,
 .bottom-next-btn .stButton > button:disabled {
-    opacity: 0.2 !important;
+    background: #2A2A35 !important;
+    color: #444 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
 }
 
 /* ── 네비 버튼: 좌우 tall (기존 유지) ── */
@@ -441,7 +444,6 @@ price_events = [
     {"date":"2025.05","event":"1Q25 흑자전환 발표","dir":"↑"},
     {"date":"2025.11","event":"3Q25 누적 흑자전환 확인","dir":"↑"},
     {"date":"2026.01","event":"최고가 349,500원 기록","dir":"▲"},
-    {"date":"2026.03","event":"현재 242,000원 (고점比 -31%)","dir":"↓"},
 ]
 
 # ════════════════════════════════════════════════════
@@ -454,6 +456,32 @@ DT = dict(
     font=dict(family="Noto Sans KR, sans-serif", color="#888", size=11),
     margin=dict(l=8, r=8, t=28, b=8),
 )
+
+# 국가별 매출 비중 (2024 사업보고서 기준: 수출 약 70%+)
+geo_data = pd.DataFrame([
+    {"country":"미국","pct":31,"color":"#7B9FFF","note":"보스턴다이내믹스·MIT·오픈AI 납품"},
+    {"country":"한국","pct":28,"color":"#E8C547","note":"내수 (연구기관·대학·삼성 등)"},
+    {"country":"유럽","pct":16,"color":"#4EC9B0","note":"독일·영국·프랑스 연구·산업"},
+    {"country":"일본","pct":11,"color":"#FF8C69","note":"자동화·로봇 연구기관"},
+    {"country":"중국","pct":7, "color":"#C084FC","note":"대학·연구소 (감소 추세)"},
+    {"country":"기타","pct":7, "color":"#555",   "note":"동남아·중동·남미 등"},
+])
+
+# B2B 주요 고객 (공개 정보 기반)
+b2b_customers = [
+    {"name":"보스턴다이내믹스","region":"🇺🇸 미국","segment":"휴머노이드 로봇",
+     "status":"공급 중","sc":"#4EC9B0","detail":"2024년 액추에이터 700개+ 납품. SPOT 등 다관절 구동계"},
+    {"name":"오픈AI","region":"🇺🇸 미국","segment":"피지컬 AI R&D",
+     "status":"협의·납품","sc":"#7B9FFF","detail":"로봇 손 HX5 R&D 납품 완료. AI 워커 공급 협의 진행"},
+    {"name":"MIT","region":"🇺🇸 미국","segment":"피지컬 AI 연구",
+     "status":"공급 중","sc":"#4EC9B0","detail":"피지컬 AI 공동연구 협약. CSAIL 등 다수 랩 채택"},
+    {"name":"LG전자","region":"🇰🇷 한국","segment":"휴머노이드 협약",
+     "status":"협약·개발","sc":"#E8C547","detail":"2024.06 휴머노이드 공동연구·사업화 협약. 2대주주(6.6%)"},
+    {"name":"KAIST·서울대 외","region":"🇰🇷 한국","segment":"대학·연구기관",
+     "status":"공급 중","sc":"#E8C547","detail":"국내 주요 대학·연구소 300곳+ 다이나믹셀 채택"},
+    {"name":"글로벌 대학·연구소","region":"🌍 해외","segment":"교육·연구",
+     "status":"공급 중","sc":"#888","detail":"전 세계 2,000곳+ 연구기관·대학. 로봇 연구 표준 플랫폼"},
+]
 
 def op_color(val, faded=False):
     a = 0.45 if faded else 0.75
@@ -488,7 +516,7 @@ if "pl_checked" not in st.session_state:
 # ════════════════════════════════════════════════════
 #  버전 정보 & 실시간 주가
 # ════════════════════════════════════════════════════
-APP_VERSION = "v2.3"
+APP_VERSION = "v2.4"
 APP_UPDATED = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 @st.cache_data(ttl=3600)   # 1시간 캐시 (과호출 방지)
@@ -1548,29 +1576,29 @@ def slide_krobot():
 
 
 def slide_perf_combined():
-    """연간 실적(매출/영업이익률) + 재무건전성 레이더 — 통합 1슬라이드"""
+    """연간 실적 + 재무건전성 레이더 + 국가별/고객별 매출"""
+    # ── 상단: 연간실적 | 재무레이더
     c1, c2 = st.columns(2)
     with c1:
         st.markdown(sec_lbl("📊","연간 실적 추이 (억원)"), unsafe_allow_html=True)
-        rev_c = ["#E8C547" if i < 4 else "rgba(232,197,71,0.4)" for i in range(len(revenue_data))]
+        rev_c = ["#E8C547" if i < 4 else "rgba(232,197,71,0.45)" for i in range(len(revenue_data))]
         op_c  = [op_color(r["op"], i >= 4) for i, r in revenue_data.iterrows()]
         fig = go.Figure()
         fig.add_bar(x=revenue_data["year"], y=revenue_data["rev"], name="매출액", marker_color=rev_c)
         fig.add_bar(x=revenue_data["year"], y=revenue_data["op"],  name="영업이익", marker_color=op_c)
         fig.add_hline(y=0, line_color="#333")
-        fig.update_layout(**DT, height=220, barmode="group",
-                          legend=dict(orientation="h", y=-0.28))
+        fig.update_layout(**DT, height=200, barmode="group",
+                          legend=dict(orientation="h", y=-0.30))
         st.plotly_chart(fig, use_container_width=True)
 
-        # 영업이익률 추이 (선)
         fig2 = go.Figure()
         fig2.add_scatter(x=revenue_data["year"], y=revenue_data["opM"],
                          mode="lines+markers",
                          line=dict(color="#E8C547", width=2),
-                         marker=dict(size=8, color=["#FF8C69" if v < 0 else "#4EC9B0" for v in revenue_data["opM"]]),
+                         marker=dict(size=7, color=["#FF8C69" if v < 0 else "#4EC9B0" for v in revenue_data["opM"]]),
                          fill="toself", fillcolor="rgba(232,197,71,0.06)")
         fig2.add_hline(y=0, line_color="#333", line_dash="dash")
-        fig2.update_layout(**DT, height=180,
+        fig2.update_layout(**DT, height=160,
                            yaxis=dict(title="OPM %", color="#555"),
                            xaxis=dict(color="#555"))
         st.plotly_chart(fig2, use_container_width=True)
@@ -1584,7 +1612,7 @@ def slide_perf_combined():
             fill="toself", fillcolor="rgba(232,197,71,0.12)",
             line=dict(color="#E8C547", width=2), name="로보티즈"
         ))
-        fig3.update_layout(**DT, height=340,
+        fig3.update_layout(**DT, height=290,
                            polar=dict(bgcolor="#18181E",
                                       radialaxis=dict(visible=True, range=[0,100], color="#333"),
                                       angularaxis=dict(color="#555")))
@@ -1595,17 +1623,60 @@ def slide_perf_combined():
                 ("영업이익(억)","-53","-30","+52"),
                 ("OPM(%)","-18.2","-10.0","+12.4")]
         th = "<tr>" + "".join(
-            f'<th style="text-align:right;color:#555;font-size:13px;padding:5px 6px;border-bottom:1px solid #22222A;">{h}</th>'
+            f'<th style="text-align:right;color:#555;font-size:12px;padding:4px 6px;border-bottom:1px solid #22222A;">{h}</th>'
             for h in ["구분","2023","2024","2025E"]
         ) + "</tr>"
         trs = ""
         for r in rows:
-            tds = f'<td style="font-size:13px;color:#666;padding:5px 6px;border-bottom:1px solid #18181E;">{r[0]}</td>'
+            tds = f'<td style="font-size:12px;color:#666;padding:4px 6px;border-bottom:1px solid #18181E;">{r[0]}</td>'
             for v in r[1:]:
                 vc = "#FF8C69" if v.startswith("-") else "#4EC9B0" if v.startswith("+") else "#B0ACA4"
-                tds += f'<td style="text-align:right;font-size:13px;color:{vc};font-family:IBM Plex Mono,monospace;padding:5px 6px;border-bottom:1px solid #18181E;">{v}</td>'
+                tds += f'<td style="text-align:right;font-size:12px;color:{vc};font-family:IBM Plex Mono,monospace;padding:4px 6px;border-bottom:1px solid #18181E;">{v}</td>'
             trs += f"<tr>{tds}</tr>"
-        st.markdown(f'<table style="width:100%;border-collapse:collapse;margin-top:10px;">{th}{trs}</table>', unsafe_allow_html=True)
+        st.markdown(f'<table style="width:100%;border-collapse:collapse;margin-top:8px;">{th}{trs}</table>', unsafe_allow_html=True)
+
+    st.markdown("<hr style='border:none;border-top:1px solid #1E1E28;margin:14px 0 10px'/>", unsafe_allow_html=True)
+
+    # ── 하단: 국가별 매출 | B2B 주요 고객
+    g1, g2 = st.columns(2)
+    with g1:
+        st.markdown(sec_lbl("🌍","국가별 매출 비중 (2024)"), unsafe_allow_html=True)
+        fig4 = go.Figure(go.Pie(
+            labels=geo_data["country"],
+            values=geo_data["pct"],
+            hole=0.52,
+            marker_colors=geo_data["color"].tolist(),
+            textfont_size=12,
+            textinfo="label+percent",
+        ))
+        fig4.update_layout(**DT, height=220, showlegend=False,
+                           margin=dict(l=0,r=0,t=10,b=0),
+                           annotations=[dict(text="수출<br>72%+", showarrow=False,
+                                             font=dict(size=11, color="#888"))])
+        st.plotly_chart(fig4, use_container_width=True)
+        # 국가별 노트
+        for g in geo_data.itertuples():
+            st.markdown(
+                f'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">' +
+                f'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:{g.color};flex-shrink:0;"></span>' +
+                f'<span style="font-size:12px;color:#666;">{g.country} <span style="color:#444;">— {g.note}</span></span></div>',
+                unsafe_allow_html=True
+            )
+
+    with g2:
+        st.markdown(sec_lbl("🤝","B2B 주요 고객 (공개 기준)"), unsafe_allow_html=True)
+        for c in b2b_customers:
+            st.markdown(f"""
+            <div style="background:#18181E;border:1px solid #22222A;border-left:3px solid {c['sc']};
+                        border-radius:6px;padding:8px 10px;margin-bottom:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:700;color:{c['sc']};">{c['name']}</span>
+                <span style="font-size:11px;background:{c['sc']}22;color:{c['sc']};
+                             padding:1px 6px;border-radius:3px;">{c['status']}</span>
+              </div>
+              <div style="font-size:11px;color:#555;margin-bottom:2px;">{c['region']} · {c['segment']}</div>
+              <div style="font-size:12px;color:#666;line-height:1.5;">{c['detail']}</div>
+            </div>""", unsafe_allow_html=True)
 
 # ─── 실적 추이 ────────────────────────────────────────
 def slide_annual():
