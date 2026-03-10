@@ -21,101 +21,136 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-/* ── Streamlit 상단 툴바·헤더 완전 숨김 ── */
+/* ── Streamlit 상단 툴바·헤더·사이드바 완전 숨김 ── */
 header[data-testid="stHeader"] { display: none !important; }
 #MainMenu { display: none !important; }
 footer { display: none !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 [data-testid="stStatusWidget"] { display: none !important; }
+section[data-testid="stSidebar"] { display: none !important; }
+[data-testid="collapsedControl"] { display: none !important; }
 
 html, body, [class*="css"] {
     font-family: 'Noto Sans KR', sans-serif;
     background: #0A0A0C;
     color: #E0DDD5;
     font-size: 14px;
+    line-height: 1.5;
 }
 .stApp { background: #0A0A0C; }
 
+/* 본문 상단 패딩 — 고정 상단바 높이만큼 확보 */
 .block-container {
-    padding-top: 0.3rem !important;
-    padding-bottom: 0.3rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 5rem !important;
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
     max-width: 100% !important;
 }
 div[data-testid="stHorizontalBlock"] { gap: 0px; }
 
-/* ── 사이드바 (데스크톱) ── */
-section[data-testid="stSidebar"] {
-    background: #0D0D12 !important;
-    border-right: 1px solid #1E1E28 !important;
-    min-width: 220px !important;
-    max-width: 220px !important;
+/* ── 고정 상단 네비 바 (웹+모바일 공통) ── */
+.top-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: #0D0D12;
+    border-bottom: 1px solid #1E1E28;
+    padding: 0 16px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 0;
 }
-section[data-testid="stSidebar"] .stButton > button {
-    background: transparent !important;
-    border: none !important;
-    border-left: 3px solid transparent !important;
-    border-radius: 0 6px 6px 0 !important;
-    color: #888 !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    text-align: left !important;
-    justify-content: flex-start !important;
-    padding: 10px 14px !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: unset !important;
-    box-shadow: none !important;
-    transition: all .15s !important;
+.top-nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 16px;
+    flex-shrink: 0;
 }
-section[data-testid="stSidebar"] .stButton > button:hover {
-    background: #1E1E28 !important;
-    color: #E0DDD5 !important;
-    border-left-color: #555 !important;
+.top-nav-logo-icon {
+    background: linear-gradient(135deg,#E8C547,#FF8C69);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
 }
-
-/* ── 모바일: 사이드바를 숨기고 상단 메뉴를 표시 ── */
-.mobile-top-menu {
-    display: none;
+.top-nav-logo-text {
+    font-size: 13px; font-weight: 700; color: #E0DDD5; white-space: nowrap;
 }
-@media (max-width: 768px) {
-    section[data-testid="stSidebar"] {
-        display: none !important;
+.top-nav-logo-sub {
+    font-size: 10px; color: #444;
+    font-family: 'IBM Plex Mono', monospace;
+}
+.top-nav-divider {
+    width: 1px; height: 28px; background: #1E1E28; margin-right: 12px; flex-shrink: 0;
+}
+.top-nav-links {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+}
+.top-nav-links::-webkit-scrollbar { display: none; }
+.top-nav-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: #555;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all .15s;
+    text-decoration: none;
+}
+.top-nav-btn:hover { background: #1E1E28; color: #C0BDB4; }
+.top-nav-btn.active {
+    background: #1E1E28;
+    color: #E8C547;
+    border-bottom: 2px solid #E8C547;
+}
+/* 모바일에서 텍스트 버튼 대신 셀렉트로 전환 */
+.top-nav-select-wrap { display: none; }
+@media (max-width: 640px) {
+    .top-nav-links { display: none; }
+    .top-nav-select-wrap {
+        display: flex;
+        flex: 1;
+        align-items: center;
     }
-    .mobile-top-menu {
-        display: block;
-        background: #0D0D12;
-        border-bottom: 1px solid #1E1E28;
-        padding: 8px 12px;
-        margin-bottom: 8px;
-        border-radius: 10px;
-    }
-    .mobile-top-menu select {
+    .top-nav-select-wrap select {
         width: 100%;
         background: #18181E;
         color: #E0DDD5;
         border: 1px solid #2A2A35;
         border-radius: 6px;
-        padding: 8px 12px;
-        font-size: 14px;
+        padding: 6px 10px;
+        font-size: 13px;
         font-family: 'Noto Sans KR', sans-serif;
         outline: none;
         cursor: pointer;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 28px;
     }
     .block-container {
         padding-left: 0.3rem !important;
         padding-right: 0.3rem !important;
     }
-    .slide-body { padding: 14px 14px !important; }
-    .slide-topbar { padding: 10px 14px !important; }
-    .slide-footer { padding: 8px 14px !important; }
-    .nav-wrap .stButton > button {
-        min-height: 300px !important;
-        font-size: 22px !important;
-    }
 }
+
+/* 상단바 높이만큼 컨텐츠 밀어내기 */
+.main-content-spacer { height: 58px; }
 
 /* ── 슬라이드 프레임 ── */
 .slide-frame {
@@ -128,27 +163,76 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 28px;
+    padding: 12px 22px;
     border-bottom: 1px solid #1E1E28;
     background: #0D0D12;
+    flex-wrap: wrap;
+    gap: 6px;
 }
-.slide-footer {
+.slide-body { padding: 20px 22px; }
+
+/* ── 하단 고정 네비게이션 바 ── */
+.bottom-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: #0D0D12;
+    border-top: 1px solid #1E1E28;
+    height: 52px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 28px;
-    border-top: 1px solid #1E1E28;
-    background: #0D0D12;
-    position: relative;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 20px;
 }
-.slide-body { padding: 22px 28px; }
+.bottom-nav-prev,
+.bottom-nav-next {
+    background: #1A1A24;
+    border: 1px solid #2A2A38;
+    border-radius: 8px;
+    color: #888;
+    font-size: 20px;
+    width: 40px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+.bottom-nav-prev:hover, .bottom-nav-next:hover {
+    background: #22223A;
+    border-color: #E8C547;
+    color: #E8C547;
+}
+.bottom-nav-prev.disabled, .bottom-nav-next.disabled {
+    opacity: 0.15;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.bottom-nav-dots {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    justify-content: center;
+    overflow: hidden;
+}
+.bottom-nav-counter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #444;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
 
 /* ── 카드 ── */
 .ir-card {
     background: #18181E;
     border: 1px solid #22222A;
     border-radius: 12px;
-    padding: 20px 22px;
+    padding: 18px 20px;
     margin-bottom: 12px;
 }
 
@@ -162,80 +246,64 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 }
 .prog-fill { height: 100%; border-radius: 4px; }
 
-/* ── 네비 버튼: 세로로 꽉 찬 tall 버튼 ── */
-.nav-wrap {
-    display: flex;
-    height: 100%;
-    align-items: stretch;
-}
-.nav-wrap .stButton {
-    display: flex;
-    flex: 1;
-    height: 100%;
-}
-.nav-wrap .stButton > button {
-    background: #1A1A24 !important;
-    border: 1px solid #2A2A38 !important;
-    border-radius: 10px !important;
-    color: #888 !important;
-    font-size: 32px !important;
-    font-weight: 400 !important;
-    line-height: 1 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 500px !important;
-    padding: 0 !important;
-    box-shadow: 0 0 12px rgba(0,0,0,0.3) !important;
-    transition: all .2s !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-.nav-wrap .stButton > button:hover {
-    background: #22223A !important;
-    border-color: #E8C547 !important;
-    color: #E8C547 !important;
-    box-shadow: 0 0 20px rgba(232,197,71,.15) !important;
-}
-.nav-wrap .stButton > button:disabled {
-    opacity: 0.12 !important;
-    cursor: not-allowed !important;
-}
+/* ── 글씨 크기 표준화 (일관성 유지) ── */
+.text-xs  { font-size: 11px !important; line-height: 1.5 !important; }
+.text-sm  { font-size: 12px !important; line-height: 1.5 !important; }
+.text-md  { font-size: 14px !important; line-height: 1.5 !important; }
+.text-lg  { font-size: 15px !important; line-height: 1.6 !important; }
+.text-xl  { font-size: 17px !important; line-height: 1.6 !important; }
 
-/* ── 글씨 크기 표준화 ── */
-.text-xs  { font-size: 11px !important; }
-.text-sm  { font-size: 13px !important; }
-.text-md  { font-size: 14px !important; }
-.text-lg  { font-size: 16px !important; }
-.text-xl  { font-size: 18px !important; }
+/* 본문 내 임의 font-size 과다 변동 억제 */
+.slide-body div, .slide-body span, .slide-body p {
+    line-height: inherit;
+}
 
 /* ── 표 스타일 표준화 ── */
 .ir-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 13px;
+    table-layout: fixed;
 }
 .ir-table th {
     text-align: center;
     color: #555;
-    font-size: 13px;
-    padding: 8px 10px;
+    font-size: 12px;
+    padding: 8px 8px;
     border-bottom: 1px solid #22222A;
     font-weight: 600;
     letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .ir-table td {
-    padding: 8px 10px;
-    font-size: 14px;
+    padding: 8px 8px;
+    font-size: 13px;
     border-bottom: 1px solid #18181E;
     vertical-align: middle;
     line-height: 1.5;
+    word-break: keep-all;
+}
+
+/* inline 표(동종업계 비교 등) 열 너비 균등 */
+table[style*="border-collapse"] th,
+table[style*="border-collapse"] td {
+    padding: 7px 8px !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    vertical-align: middle !important;
 }
 
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 .js-plotly-plot .plotly .bg { fill: transparent !important; }
+
+/* 모바일 슬라이드 바디 패딩 축소 */
+@media (max-width: 640px) {
+    .slide-body { padding: 14px 14px !important; }
+    .slide-topbar { padding: 10px 14px !important; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -424,134 +492,78 @@ if "pl_checked" not in st.session_state:
     st.session_state.pl_checked = {i: False for i in range(len(pipeline_items))}
 
 # ════════════════════════════════════════════════════
-#  사이드바
+#  상단 고정 네비게이션 바 (웹+모바일 통일)
 # ════════════════════════════════════════════════════
-with st.sidebar:
-    st.markdown("""
-    <div style="padding:14px 4px 18px;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-        <div style="background:linear-gradient(135deg,#E8C547,#FF8C69);width:34px;height:34px;
-                    border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;">🤖</div>
-        <div>
-          <div style="font-size:16px;font-weight:700;color:#E0DDD5;">로보티즈</div>
-          <div style="font-size:11px;color:#555;font-family:'IBM Plex Mono',monospace;">108490 · KOSDAQ</div>
-        </div>
-      </div>
-      <div style="background:#1A2A1A;border:1px solid #2A4A2A;border-radius:6px;
-                  padding:5px 10px;font-size:11px;color:#4EC9B0;font-family:'IBM Plex Mono',monospace;">
-        ● 242,000원 &nbsp;|&nbsp; 2026.03
-      </div>
-    </div>
-    <hr style="border:none;border-top:1px solid #1E1E28;margin:0 0 12px;"/>
-    """, unsafe_allow_html=True)
 
-    for i, sec in enumerate(SECTION_KEYS):
-        is_active = (i == st.session_state.section_idx)
-        btn_style = (
-            "background:#1E1E28;border-radius:8px;padding:8px 12px;margin-bottom:4px;"
-            "border-left:3px solid #E8C547;" if is_active else
-            "background:transparent;border-radius:8px;padding:8px 12px;margin-bottom:4px;border-left:3px solid transparent;"
-        )
-        label_color = "#E8C547" if is_active else "#777"
-        if st.button(sec, key=f"nav_{i}", use_container_width=True):
-            st.session_state.section_idx = i
-            st.session_state.slide_idx = 0
-            st.rerun()
+# 상단 네비바 버튼 HTML 생성
+_nav_links_html = ""
+for _i, _sec in enumerate(SECTION_KEYS):
+    _active_cls = "active" if _i == st.session_state.section_idx else ""
+    _nav_links_html += f'<button class="top-nav-btn {_active_cls}" onclick="topNavClick({_i})">{_sec}</button>'
 
-    st.markdown("<div style='height:20px'/>", unsafe_allow_html=True)
-    st.markdown("""
-    <div style="font-size:11px;color:#333;line-height:1.6;padding:0 4px;">
-      ⚠️ 본 자료는 투자 참고 목적이며 투자의 최종 책임은 투자자 본인에게 있습니다.
-    </div>
-    """, unsafe_allow_html=True)
-
-# ════════════════════════════════════════════════════
-#  모바일 상단 메뉴 (portrait 모드에서만 CSS로 표시)
-# ════════════════════════════════════════════════════
-_mobile_sec_options = "".join(
-    f'<option value="{_mi}" {"selected" if _mi == st.session_state.section_idx else ""}>{_msec}</option>'
-    for _mi, _msec in enumerate(SECTION_KEYS)
+_nav_select_html = "".join(
+    f'<option value="{_i}" {"selected" if _i == st.session_state.section_idx else ""}>{_sec}</option>'
+    for _i, _sec in enumerate(SECTION_KEYS)
 )
 
 st.markdown(f"""
-<style>
-.mobile-menu-wrap {{
-    display: none;
-}}
-@media (max-width: 768px) {{
-    .mobile-menu-wrap {{
-        display: block;
-        background: #0D0D12;
-        border: 1px solid #1E1E28;
-        border-radius: 10px;
-        padding: 10px 14px;
-        margin-bottom: 10px;
-    }}
-    .mobile-menu-wrap .menu-header {{
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 8px;
-    }}
-    .mobile-menu-wrap .menu-logo {{
-        background: linear-gradient(135deg,#E8C547,#FF8C69);
-        width: 28px; height: 28px;
-        border-radius: 6px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 14px; flex-shrink: 0;
-    }}
-    .mobile-menu-wrap .menu-title {{
-        font-size: 14px; font-weight: 700; color: #E0DDD5;
-    }}
-    .mobile-menu-wrap .menu-ticker {{
-        font-size: 11px; color: #555;
-        font-family: 'IBM Plex Mono', monospace;
-    }}
-    .mobile-menu-wrap select {{
-        width: 100%;
-        background: #18181E;
-        color: #E0DDD5;
-        border: 1px solid #2A2A35;
-        border-radius: 6px;
-        padding: 9px 12px;
-        font-size: 14px;
-        font-family: 'Noto Sans KR', sans-serif;
-        outline: none;
-        cursor: pointer;
-        -webkit-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        padding-right: 32px;
-    }}
-    .mobile-menu-wrap .cur-badge {{
-        margin-top: 6px;
-        font-size: 11px; color: #555;
-        font-family: 'IBM Plex Mono', monospace;
-        text-align: right;
-    }}
-}}
-</style>
-<div class="mobile-menu-wrap">
-  <div class="menu-header">
-    <div class="menu-logo">🤖</div>
+<div class="top-nav-bar">
+  <div class="top-nav-logo">
+    <div class="top-nav-logo-icon">🤖</div>
     <div>
-      <div class="menu-title">로보티즈 IR 2026</div>
-      <div class="menu-ticker">108490 · KOSDAQ · 242,000원</div>
+      <div class="top-nav-logo-text">로보티즈</div>
+      <div class="top-nav-logo-sub">108490 · KOSDAQ</div>
     </div>
   </div>
-  <select id="mobileSectionSelect" onchange="mobileSectionChange(this.value)">
-    {_mobile_sec_options}
-  </select>
-  <div class="cur-badge">현재: {SECTION_KEYS[st.session_state.section_idx]}</div>
+  <div class="top-nav-divider"></div>
+  <div class="top-nav-links">{_nav_links_html}</div>
+  <div class="top-nav-select-wrap">
+    <select onchange="topNavClick(this.value)">{_nav_select_html}</select>
+  </div>
 </div>
+<div class="main-content-spacer"></div>
 <script>
-function mobileSectionChange(idx) {{
-  var btns = window.parent.document.querySelectorAll('section[data-testid="stSidebar"] button');
-  if (btns && btns[parseInt(idx)]) {{ btns[parseInt(idx)].click(); }}
+function topNavClick(idx) {{
+  // 숨겨진 섹션 버튼들을 찾아 해당 인덱스 클릭
+  var doc = window.parent.document;
+  var allBtns = doc.querySelectorAll('button[kind="secondary"], [data-testid="baseButton-secondary"]');
+  var navBtns = [];
+  allBtns.forEach(function(b) {{
+    var txt = b.innerText.trim();
+    // 섹션 이름 포함 여부로 필터 (✅ 🏢 📡 🔧 ⚔️ 📈 💰)
+    if (txt.match(/체크포인트|기업 개요|마켓|파이프라인|경쟁|실적|밸류/)) {{
+      navBtns.push(b);
+    }}
+  }});
+  if (navBtns[parseInt(idx)]) {{
+    navBtns[parseInt(idx)].click();
+  }}
 }}
 </script>
 """, unsafe_allow_html=True)
+
+# 섹션 네비 버튼 (숨김 상태로 렌더, JS에서 클릭 트리거)
+_nav_cols = st.columns(len(SECTION_KEYS))
+for _i, (_col, _sec) in enumerate(zip(_nav_cols, SECTION_KEYS)):
+    with _col:
+        if st.button(_sec, key=f"nav_{_i}", use_container_width=True):
+            st.session_state.section_idx = _i
+            st.session_state.slide_idx = 0
+            st.rerun()
+
+# 숨김 처리 CSS — 섹션 버튼을 화면에서 제거
+st.markdown("""
+<style>
+/* 섹션 네비 버튼 숨김 (기능은 유지) */
+div[data-testid="stColumns"] > div[data-testid="stColumn"] > div[data-testid="stVerticalBlock"] > div[data-testid="stButton"] > button {
+    display: none !important;
+}
+div[data-testid="stColumns"]:has(button[key^="nav_"]) {
+    display: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 
 # ════════════════════════════════════════════════════
@@ -1625,17 +1637,17 @@ def slide_valuation():
         </div>""", unsafe_allow_html=True)
     with c2:
         st.markdown(sec_lbl("📊","동종업종 밸류에이션 비교"), unsafe_allow_html=True)
-        th = '<tr>' + ''.join(f'<th style="text-align:center;color:#555;font-size:14px;padding:6px 4px;border-bottom:1px solid #22222A;">{h}</th>' for h in ["기업명","시총","PSR(25E)","PBR(25E)"]) + '</tr>'
+        th = '<tr>' + ''.join(f'<th style="text-align:center;color:#555;font-size:13px;padding:8px 8px;border-bottom:1px solid #22222A;font-weight:600;">{h}</th>' for h in ["기업명","시총","PSR(25E)","PBR(25E)"]) + '</tr>'
         trs = ""
         for i, p in enumerate(peers):
             bg = "#1E1E0A" if i==0 else "transparent"
             trs += f'<tr style="background:{bg};">'
-            trs += f'<td style="padding:7px 4px;color:{p["color"]};font-weight:{"700" if i==0 else "400"};font-size:15px;border-bottom:1px solid #18181E;">{p["name"]}</td>'
+            trs += f'<td style="padding:8px 8px;color:{p["color"]};font-weight:{"700" if i==0 else "400"};font-size:13px;border-bottom:1px solid #18181E;">{p["name"]}</td>'
             for val in [p["cap"],p["psr25"],p["pbr25"]]:
                 vc = "#FF8C69" if (i==0 and val not in ["3.67조","N/A"]) else "#888"
-                trs += f'<td style="text-align:center;color:{vc};font-family:\'IBM Plex Mono\',monospace;font-size:14px;padding:7px 4px;border-bottom:1px solid #18181E;">{val}</td>'
+                trs += f'<td style="text-align:center;color:{vc};font-family:\'IBM Plex Mono\',monospace;font-size:13px;padding:8px 8px;border-bottom:1px solid #18181E;">{val}</td>'
             trs += "</tr>"
-        st.markdown(f'<table style="width:100%;border-collapse:collapse;">{th}{trs}</table>', unsafe_allow_html=True)
+        st.markdown(f'<table style="width:100%;border-collapse:collapse;table-layout:fixed;">{th}{trs}</table>', unsafe_allow_html=True)
 
 
 
@@ -1715,32 +1727,26 @@ SLIDE_RENDERERS = {
 #  메인 레이아웃  [‹] [슬라이드프레임] [›]
 # ════════════════════════════════════════════════════
 
-# 점 인디케이터
-_dots = '<div style="display:flex;align-items:center;gap:8px;">'
-for _i in range(n_slides):
-    if _i == si:
-        _dots += '<div style="width:26px;height:8px;border-radius:4px;background:#E8C547;display:inline-block;"></div>'
-    else:
-        _dots += '<div style="width:8px;height:8px;border-radius:50%;background:#2A2A35;display:inline-block;"></div>'
-_dots += '</div>'
+# ════════════════════════════════════════════════════
+#  메인 레이아웃 — 슬라이드 프레임 (상하단 고정 바 사용)
+# ════════════════════════════════════════════════════
 
 # ── 상단 타이틀바
 _topbar = f"""
 <div class="slide-frame">
   <div class="slide-topbar">
-    <div style="display:flex;align-items:center;gap:12px;min-width:0;">
-      <div style="font-size:13px;color:#555;font-family:'IBM Plex Mono',monospace;
+    <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+      <div style="font-size:11px;color:#555;font-family:'IBM Plex Mono',monospace;
                   white-space:nowrap;letter-spacing:0.5px;">{cur_sec}</div>
-      <span style="color:#2A2A35;font-size:16px;">›</span>
-      <div style="font-size:18px;font-weight:700;color:#E8C547;
+      <span style="color:#2A2A35;font-size:14px;">›</span>
+      <div style="font-size:15px;font-weight:700;color:#E8C547;
                   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{cur_slide}</div>
     </div>
-    <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
-      <span style="font-size:13px;color:#444;font-family:'IBM Plex Mono',monospace;">ROBOTIS 108490 · 2026.03</span>
-      <div style="background:#1E1E28;border:1px solid #2A2A35;border-radius:8px;
-                  padding:5px 14px;display:flex;align-items:center;gap:8px;">
-        <span style="font-size:11px;color:#555;font-family:'IBM Plex Mono',monospace;">{cur_sec.split()[-1] if ' ' in cur_sec else cur_sec}</span>
-        <span style="font-size:18px;font-weight:800;color:#E8C547;
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <span style="font-size:11px;color:#333;font-family:'IBM Plex Mono',monospace;">ROBOTIS 108490 · 2026.03</span>
+      <div style="background:#1E1E28;border:1px solid #2A2A35;border-radius:6px;
+                  padding:4px 10px;display:flex;align-items:center;gap:6px;">
+        <span style="font-size:14px;font-weight:700;color:#E8C547;
                      font-family:'IBM Plex Mono',monospace;letter-spacing:1px;">{si+1}/{n_slides}</span>
       </div>
     </div>
@@ -1748,36 +1754,67 @@ _topbar = f"""
   <div class="slide-body">
 """
 
-# ── 하단 푸터
-_footer = f"""
-  </div>
-  <div class="slide-footer">
-    {_dots}
-    <div style="font-size:14px;color:#555;font-family:'IBM Plex Mono',monospace;
-                position:absolute;left:50%;transform:translateX(-50%);">{si+1} / {n_slides}</div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2A2A35;">ROBOTIS IR</div>
+_footer = """
   </div>
 </div>
 """
 
-# ── 레이아웃: [prev] [슬라이드] [next]
-_col_prev, _col_main, _col_next = st.columns([1, 26, 1])
+# ── 슬라이드 렌더링 (상단)
+st.markdown(_topbar, unsafe_allow_html=True)
+SLIDE_RENDERERS[cur_slide]()
+st.markdown(_footer, unsafe_allow_html=True)
 
-with _col_prev:
-    st.markdown('<div class="nav-wrap" style="height:100%;min-height:500px;">', unsafe_allow_html=True)
-    if st.button("‹", key="prev_btn", disabled=(si == 0), use_container_width=True):
+# ── 점 인디케이터 (하단 바용)
+_dots_html = '<div class="bottom-nav-dots">'
+_max_dots = 10
+if n_slides <= _max_dots:
+    for _i in range(n_slides):
+        if _i == si:
+            _dots_html += '<div style="width:20px;height:6px;border-radius:3px;background:#E8C547;flex-shrink:0;"></div>'
+        else:
+            _dots_html += '<div style="width:6px;height:6px;border-radius:50%;background:#2A2A35;flex-shrink:0;"></div>'
+_dots_html += '</div>'
+
+# ── 하단 고정 네비 바
+_prev_dis = "disabled" if si == 0 else ""
+_next_dis = "disabled" if si == n_slides - 1 else ""
+
+st.markdown(f"""
+<div class="bottom-nav-bar">
+  <button class="bottom-nav-prev {_prev_dis}" onclick="bottomNavClick('prev')" title="이전">‹</button>
+  {_dots_html}
+  <span class="bottom-nav-counter">{si+1} / {n_slides}</span>
+  <button class="bottom-nav-next {_next_dis}" onclick="bottomNavClick('next')" title="다음">›</button>
+</div>
+<script>
+function bottomNavClick(dir) {{
+  var doc = window.parent.document;
+  var btns = doc.querySelectorAll('button');
+  for (var i=0; i<btns.length; i++) {{
+    var txt = btns[i].innerText.trim();
+    if (dir === 'prev' && (txt === '‹' || txt === '\u2039')) {{ btns[i].click(); return; }}
+    if (dir === 'next' && (txt === '›' || txt === '\u203a')) {{ btns[i].click(); return; }}
+  }}
+}}
+</script>
+""", unsafe_allow_html=True)
+
+# 숨겨진 prev/next 버튼 (기능용)
+_hcol1, _hcol2 = st.columns(2)
+with _hcol1:
+    if st.button("‹", key="prev_btn", disabled=(si == 0)):
         st.session_state.slide_idx -= 1
         st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with _col_main:
-    st.markdown(_topbar, unsafe_allow_html=True)
-    SLIDE_RENDERERS[cur_slide]()
-    st.markdown(_footer, unsafe_allow_html=True)
-
-with _col_next:
-    st.markdown('<div class="nav-wrap" style="height:100%;min-height:500px;">', unsafe_allow_html=True)
-    if st.button("›", key="next_btn", disabled=(si == n_slides - 1), use_container_width=True):
+with _hcol2:
+    if st.button("›", key="next_btn", disabled=(si == n_slides - 1)):
         st.session_state.slide_idx += 1
         st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+
+# 모든 Streamlit 버튼 숨김 (상단 nav + prev/next 모두 JS로만 동작)
+st.markdown("""
+<style>
+div[data-testid="stHorizontalBlock"] { display: none !important; }
+</style>
+""", unsafe_allow_html=True)
+
+
