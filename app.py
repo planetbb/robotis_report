@@ -506,6 +506,33 @@ _nav_select_html = "".join(
     for _i, _sec in enumerate(SECTION_KEYS)
 )
 
+
+# ── 섹션 네비 버튼: offscreen CSS로 화면 밖에 두되 클릭은 가능
+_nav_cols = st.columns(len(SECTION_KEYS))
+for _i, (_col, _sec) in enumerate(zip(_nav_cols, SECTION_KEYS)):
+    with _col:
+        if st.button(_sec, key=f"nav_{_i}", use_container_width=True):
+            st.session_state.section_idx = _i
+            st.session_state.slide_idx = 0
+            st.rerun()
+
+# 섹션 버튼 행 offscreen (display:none 금지 — pointer-events 유지)
+st.markdown("""
+<style>
+div[data-testid="stHorizontalBlock"]:first-of-type {
+    position: fixed !important;
+    left: -9999px !important;
+    top: 0px !important;
+    width: 1px !important;
+    pointer-events: auto !important;
+    z-index: 1 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ── 상단 고정 네비바 HTML + JS (offscreen 버튼을 키로 찾아 클릭)
+_nav_sec_labels = [s for s in SECTION_KEYS]  # 실제 버튼 텍스트와 일치
+
 st.markdown(f"""
 <div class="top-nav-bar">
   <div class="top-nav-logo">
@@ -518,50 +545,10 @@ st.markdown(f"""
   <div class="top-nav-divider"></div>
   <div class="top-nav-links">{_nav_links_html}</div>
   <div class="top-nav-select-wrap">
-    <select onchange="topNavClick(this.value)">{_nav_select_html}</select>
+    <select onchange="topNavClick(parseInt(this.value))">{_nav_select_html}</select>
   </div>
 </div>
 <div class="main-content-spacer"></div>
-<script>
-function topNavClick(idx) {{
-  // 숨겨진 섹션 버튼들을 찾아 해당 인덱스 클릭
-  var doc = window.parent.document;
-  var allBtns = doc.querySelectorAll('button[kind="secondary"], [data-testid="baseButton-secondary"]');
-  var navBtns = [];
-  allBtns.forEach(function(b) {{
-    var txt = b.innerText.trim();
-    // 섹션 이름 포함 여부로 필터 (✅ 🏢 📡 🔧 ⚔️ 📈 💰)
-    if (txt.match(/체크포인트|기업 개요|마켓|파이프라인|경쟁|실적|밸류/)) {{
-      navBtns.push(b);
-    }}
-  }});
-  if (navBtns[parseInt(idx)]) {{
-    navBtns[parseInt(idx)].click();
-  }}
-}}
-</script>
-""", unsafe_allow_html=True)
-
-# 섹션 네비 버튼 (숨김 상태로 렌더, JS에서 클릭 트리거)
-_nav_cols = st.columns(len(SECTION_KEYS))
-for _i, (_col, _sec) in enumerate(zip(_nav_cols, SECTION_KEYS)):
-    with _col:
-        if st.button(_sec, key=f"nav_{_i}", use_container_width=True):
-            st.session_state.section_idx = _i
-            st.session_state.slide_idx = 0
-            st.rerun()
-
-# 숨김 처리 CSS — 섹션 버튼을 화면에서 제거
-st.markdown("""
-<style>
-/* 섹션 네비 버튼 숨김 (기능은 유지) */
-div[data-testid="stColumns"] > div[data-testid="stColumn"] > div[data-testid="stVerticalBlock"] > div[data-testid="stButton"] > button {
-    display: none !important;
-}
-div[data-testid="stColumns"]:has(button[key^="nav_"]) {
-    display: none !important;
-}
-</style>
 """, unsafe_allow_html=True)
 
 
@@ -1799,22 +1786,90 @@ function bottomNavClick(dir) {{
 </script>
 """, unsafe_allow_html=True)
 
-# 숨겨진 prev/next 버튼 (기능용)
+# ── prev/next 버튼: offscreen CSS, JS에서 고유 텍스트로 탐색
 _hcol1, _hcol2 = st.columns(2)
 with _hcol1:
-    if st.button("‹", key="prev_btn", disabled=(si == 0)):
+    if st.button("PREV_NAV", key="prev_btn", disabled=(si == 0)):
         st.session_state.slide_idx -= 1
         st.rerun()
 with _hcol2:
-    if st.button("›", key="next_btn", disabled=(si == n_slides - 1)):
+    if st.button("NEXT_NAV", key="next_btn", disabled=(si == n_slides - 1)):
         st.session_state.slide_idx += 1
         st.rerun()
 
-# 모든 Streamlit 버튼 숨김 (상단 nav + prev/next 모두 JS로만 동작)
+# prev/next 버튼 행도 offscreen (두 번째 stHorizontalBlock)
 st.markdown("""
 <style>
-div[data-testid="stHorizontalBlock"] { display: none !important; }
+div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
+    position: fixed !important;
+    left: -9998px !important;
+    top: 0px !important;
+    width: 1px !important;
+    pointer-events: auto !important;
+    z-index: 1 !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
+# ── 점 인디케이터 (하단 바용)
+_dots_html = '<div class="bottom-nav-dots">'
+if n_slides <= 10:
+    for _i in range(n_slides):
+        if _i == si:
+            _dots_html += '<div style="width:20px;height:6px;border-radius:3px;background:#E8C547;flex-shrink:0;"></div>'
+        else:
+            _dots_html += '<div style="width:6px;height:6px;border-radius:50%;background:#2A2A35;flex-shrink:0;"></div>'
+_dots_html += '</div>'
+
+_prev_dis = "disabled" if si == 0 else ""
+_next_dis = "disabled" if si == n_slides - 1 else ""
+
+st.markdown(f"""
+<div class="bottom-nav-bar">
+  <button class="bottom-nav-prev {_prev_dis}" onclick="doNav('prev')" title="이전 슬라이드">‹</button>
+  {_dots_html}
+  <span class="bottom-nav-counter">{si+1} / {n_slides}</span>
+  <button class="bottom-nav-next {_next_dis}" onclick="doNav('next')" title="다음 슬라이드">›</button>
+</div>
+<script>
+function doNav(dir) {{
+  var doc = window.parent.document;
+  var target = dir === 'prev' ? 'PREV_NAV' : 'NEXT_NAV';
+  var btns = doc.querySelectorAll('button');
+  for (var i = 0; i < btns.length; i++) {{
+    if (btns[i].innerText.trim() === target && !btns[i].disabled) {{
+      btns[i].click();
+      return;
+    }}
+  }}
+}}
+function topNavClick(idx) {{
+  var doc = window.parent.document;
+  var labels = {str([s for s in SECTION_KEYS]).replace("'", '"')};
+  var target = labels[parseInt(idx)];
+  if (!target) return;
+  var btns = doc.querySelectorAll('button');
+  for (var i = 0; i < btns.length; i++) {{
+    if (btns[i].innerText.trim() === target) {{
+      btns[i].click();
+      return;
+    }}
+  }}
+}}
+// 키보드 방향키 지원
+(function() {{
+  var doc = window.parent.document;
+  if (!doc._navKeyBound) {{
+    doc.addEventListener('keydown', function(e) {{
+      if (e.key === 'ArrowRight') doNav('next');
+      if (e.key === 'ArrowLeft')  doNav('prev');
+    }});
+    doc._navKeyBound = true;
+  }}
+}})();
+</script>
+""", unsafe_allow_html=True)
+
+
 
 
