@@ -6,6 +6,13 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import datetime
+
+try:
+    import yfinance as yf
+    _YF_AVAILABLE = True
+except ImportError:
+    _YF_AVAILABLE = False
 
 st.set_page_config(
     page_title="로보티즈 IR 2026",
@@ -47,6 +54,7 @@ html, body, [class*="css"] {
     max-width: 100% !important;
 }
 div[data-testid="stHorizontalBlock"] { gap: 0px; }
+div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] { padding: 0 10px; }
 
 /* ── 상단 탭 네비 (Streamlit selectbox + buttons) ── */
 div[data-testid="stSelectbox"] > div {
@@ -320,9 +328,6 @@ valuation = [
     {"label":"2025 연간 매출 (추정)","value":"약 420억원","color":"#aaa"},
     {"label":"PSR (주가/매출)","value":"약 87x","color":"#FF8C69"},
     {"label":"PBR","value":"약 12x","color":"#FF8C69"},
-    {"label":"애널리스트 목표가 평균","value":"149,000원","color":"#4EC9B0"},
-    {"label":"다이와증권 목표가","value":"360,000원","color":"#7B9FFF"},
-    {"label":"컨센서스 하락 여력","value":"-38% (고평가)","color":"#FF8C69"},
 ]
 peers = [
     {"name":"로보티즈","cap":"3.67조","psr25":"87x","pbr25":"12x","color":"#E8C547"},
@@ -461,9 +466,9 @@ SECTIONS = {
     "✅ 체크포인트":   ["KPI 요약", "체크포인트 & 리스크", "주가 이벤트"],
     "🏢 기업 개요":    ["기업 정보 & 주주", "제품 포트폴리오"],
     "📡 마켓 포지셔닝":["프로토콜 오너 해자", "SDK & B2B 레퍼런스", "모듈형 vs 수직계열화", "TAM & 채택률", "수혜 4단계 로드맵"],
-    "🔧 파이프라인":   ["유상증자 자금계획", "QDD & 우즈벡 거점", "테슬라 공급 시나리오", "미국 관세 규제", "제품 로드맵", "파이프라인 현황"],
-    "⚔️ 경쟁 분석":    ["중국 경쟁사 위협", "경쟁력 비교 레이더", "K-로봇 재무 비교"],
-    "📈 실적 추이":    ["연간 실적 차트", "분기 실적 & 레이더"],
+    "🔧 파이프라인":   ["제품 로드맵", "파이프라인 현황", "유상증자 자금계획", "QDD & 우즈벡 거점", "테슬라 공급 시나리오", "미국 관세 규제"],
+    "⚔️ 경쟁 분석":    ["경쟁력 비교 레이더", "중국 경쟁사 위협", "K-로봇 재무 비교"],
+    "📈 실적 추이":    ["실적 & 재무건전성"],
     "💰 밸류에이션":   ["밸류에이션 지표"],
 }
 SECTION_KEYS = list(SECTIONS.keys())
@@ -481,15 +486,46 @@ if "pl_checked" not in st.session_state:
     st.session_state.pl_checked = {i: False for i in range(len(pipeline_items))}
 
 # ════════════════════════════════════════════════════
-#  버전 정보
+#  버전 정보 & 실시간 주가
 # ════════════════════════════════════════════════════
-APP_VERSION = "v2.1"
-APP_UPDATED = "2026-03-10 최종수정"
+APP_VERSION = "v2.3"
+APP_UPDATED = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+@st.cache_data(ttl=3600)   # 1시간 캐시 (과호출 방지)
+def get_robotis_price():
+    """로보티즈(108490.KQ) 전일 종가 + 등락률 조회"""
+    if not _YF_AVAILABLE:
+        return None, None, None
+    try:
+        ticker = yf.Ticker("108490.KQ")
+        hist   = ticker.history(period="5d")  # 5거래일 조회 (휴장일 대비)
+        if hist.empty or len(hist) < 2:
+            return None, None, None
+        prev_close  = hist["Close"].iloc[-2]   # 전전일 (기준)
+        last_close  = hist["Close"].iloc[-1]   # 전일 종가
+        change_pct  = (last_close - prev_close) / prev_close * 100
+        last_date   = hist.index[-1].strftime("%Y.%m.%d")
+        return int(last_close), round(change_pct, 2), last_date
+    except Exception:
+        return None, None, None
+
+_price, _chg, _price_date = get_robotis_price()
+
+if _price:
+    _chg_color = "#4EC9B0" if _chg >= 0 else "#FF8C69"
+    _chg_sign  = "▲" if _chg >= 0 else "▼"
+    _price_html = (
+        f'<span style="color:#E8C547;font-weight:700;">{_price:,}원</span>'
+        f'&nbsp;<span style="color:{_chg_color};font-size:10px;">'
+        f'{_chg_sign}{abs(_chg):.2f}%</span>'
+        f'&nbsp;<span style="color:#333;font-size:10px;">({_price_date} 종가)</span>'
+    )
+else:
+    _price_html = '<span style="color:#555;">주가 로딩 중…</span>'
 
 # ════════════════════════════════════════════════════
 #  상단 헤더 + 섹션 탭 (Streamlit 네이티브 — JS 없음)
 # ════════════════════════════════════════════════════
-# 로고 + 버전 헤더
 st.markdown(f"""
 <div style="display:flex;align-items:center;justify-content:space-between;
             background:#0D0D12;border-bottom:1px solid #1E1E28;
@@ -502,8 +538,11 @@ st.markdown(f"""
       <span style="font-size:11px;color:#444;font-family:'IBM Plex Mono',monospace;margin-left:8px;">108490 · KOSDAQ</span>
     </div>
   </div>
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#333;text-align:right;">
-    <span style="color:#555;">{APP_VERSION}</span>&nbsp;·&nbsp;{APP_UPDATED}
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right;line-height:1.8;">
+    {_price_html}<br>
+    <span style="color:#444;">{APP_VERSION}</span>
+    <span style="color:#2A2A35;">&nbsp;·&nbsp;</span>
+    <span style="color:#333;">업데이트 {APP_UPDATED}</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1507,6 +1546,67 @@ def slide_krobot():
     fig.update_layout(margin=dict(l=40, r=10, t=10, b=40))
     st.plotly_chart(fig, use_container_width=True)
 
+
+def slide_perf_combined():
+    """연간 실적(매출/영업이익률) + 재무건전성 레이더 — 통합 1슬라이드"""
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown(sec_lbl("📊","연간 실적 추이 (억원)"), unsafe_allow_html=True)
+        rev_c = ["#E8C547" if i < 4 else "rgba(232,197,71,0.4)" for i in range(len(revenue_data))]
+        op_c  = [op_color(r["op"], i >= 4) for i, r in revenue_data.iterrows()]
+        fig = go.Figure()
+        fig.add_bar(x=revenue_data["year"], y=revenue_data["rev"], name="매출액", marker_color=rev_c)
+        fig.add_bar(x=revenue_data["year"], y=revenue_data["op"],  name="영업이익", marker_color=op_c)
+        fig.add_hline(y=0, line_color="#333")
+        fig.update_layout(**DT, height=220, barmode="group",
+                          legend=dict(orientation="h", y=-0.28))
+        st.plotly_chart(fig, use_container_width=True)
+
+        # 영업이익률 추이 (선)
+        fig2 = go.Figure()
+        fig2.add_scatter(x=revenue_data["year"], y=revenue_data["opM"],
+                         mode="lines+markers",
+                         line=dict(color="#E8C547", width=2),
+                         marker=dict(size=8, color=["#FF8C69" if v < 0 else "#4EC9B0" for v in revenue_data["opM"]]),
+                         fill="toself", fillcolor="rgba(232,197,71,0.06)")
+        fig2.add_hline(y=0, line_color="#333", line_dash="dash")
+        fig2.update_layout(**DT, height=180,
+                           yaxis=dict(title="OPM %", color="#555"),
+                           xaxis=dict(color="#555"))
+        st.plotly_chart(fig2, use_container_width=True)
+
+    with c2:
+        st.markdown(sec_lbl("🕸️","재무 건전성 레이더"), unsafe_allow_html=True)
+        cats_r = radar_data["subject"] + [radar_data["subject"][0]]
+        vals_r = radar_data["value"]   + [radar_data["value"][0]]
+        fig3 = go.Figure(go.Scatterpolar(
+            r=vals_r, theta=cats_r,
+            fill="toself", fillcolor="rgba(232,197,71,0.12)",
+            line=dict(color="#E8C547", width=2), name="로보티즈"
+        ))
+        fig3.update_layout(**DT, height=340,
+                           polar=dict(bgcolor="#18181E",
+                                      radialaxis=dict(visible=True, range=[0,100], color="#333"),
+                                      angularaxis=dict(color="#555")))
+        st.plotly_chart(fig3, use_container_width=True)
+
+        rows = [("매출액(억)","291","300","420"),
+                ("YoY(%)","11.8","3.1","40"),
+                ("영업이익(억)","-53","-30","+52"),
+                ("OPM(%)","-18.2","-10.0","+12.4")]
+        th = "<tr>" + "".join(
+            f'<th style="text-align:right;color:#555;font-size:13px;padding:5px 6px;border-bottom:1px solid #22222A;">{h}</th>'
+            for h in ["구분","2023","2024","2025E"]
+        ) + "</tr>"
+        trs = ""
+        for r in rows:
+            tds = f'<td style="font-size:13px;color:#666;padding:5px 6px;border-bottom:1px solid #18181E;">{r[0]}</td>'
+            for v in r[1:]:
+                vc = "#FF8C69" if v.startswith("-") else "#4EC9B0" if v.startswith("+") else "#B0ACA4"
+                tds += f'<td style="text-align:right;font-size:13px;color:{vc};font-family:IBM Plex Mono,monospace;padding:5px 6px;border-bottom:1px solid #18181E;">{v}</td>'
+            trs += f"<tr>{tds}</tr>"
+        st.markdown(f'<table style="width:100%;border-collapse:collapse;margin-top:10px;">{th}{trs}</table>', unsafe_allow_html=True)
+
 # ─── 실적 추이 ────────────────────────────────────────
 def slide_annual():
     c1, c2 = st.columns(2)
@@ -1587,11 +1687,7 @@ def slide_valuation():
         for v in valuation:
             html += kv_row(v["label"], v["value"], v["color"])
         st.markdown(f'<div class="ir-card">{html}</div>', unsafe_allow_html=True)
-        st.markdown("""
-        <div style="background:#1A1010;border:1px solid #3A2020;border-radius:8px;padding:10px 12px;
-                    font-size:15px;color:#FF8C69;line-height:1.65;">
-          ⚠️ 2025년 주가 +1,052% 급등 이후 PSR 87배 극단적 프리미엄. 컨센서스 대비 -38% 하락 여력 존재.
-        </div>""", unsafe_allow_html=True)
+
     with c2:
         st.markdown(sec_lbl("📊","동종업종 밸류에이션 비교"), unsafe_allow_html=True)
         th = '<tr>' + ''.join(f'<th style="text-align:center;color:#555;font-size:14px;padding:6px 4px;border-bottom:1px solid #22222A;">{h}</th>' for h in ["기업명","시총","PSR(25E)","PBR(25E)"]) + '</tr>'
@@ -1675,8 +1771,7 @@ SLIDE_RENDERERS = {
     "중국 경쟁사 위협":      slide_china_rivals,
     "경쟁력 비교 레이더":    slide_radar_diff,
     "K-로봇 재무 비교":     slide_krobot,
-    "연간 실적 차트":        slide_annual,
-    "분기 실적 & 레이더":    slide_radar_perf,
+    "실적 & 재무건전성":     slide_perf_combined,
     "밸류에이션 지표":       slide_valuation,
 }
 
@@ -1719,34 +1814,34 @@ for _di in range(n_slides):
     else:
         _dots_html += '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#2A2A35;margin:0 2px;vertical-align:middle;"></span>'
 
-_nc1, _nc2, _nc3, _nc4, _nc5 = st.columns([1, 6, 3, 6, 1])
+# 센터 정렬: [빈칸] [‹] [점+페이지] [›] [빈칸]
+_nc1, _nc2, _nc3, _nc4, _nc5 = st.columns([3, 1, 6, 1, 3])
 
 with _nc1:
+    st.markdown('<div style="height:42px;"></div>', unsafe_allow_html=True)
+
+with _nc2:
     st.markdown('<div class="bottom-prev-btn">', unsafe_allow_html=True)
     if st.button("‹", key="prev_btn", disabled=(si == 0), use_container_width=True):
         st.session_state.slide_idx -= 1
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
-with _nc2:
-    st.markdown(
-        f'<div style="display:flex;align-items:center;justify-content:flex-end;height:42px;padding-right:8px;">{_dots_html}</div>',
-        unsafe_allow_html=True
-    )
-
 with _nc3:
     st.markdown(
-        f'<div style="display:flex;align-items:center;justify-content:center;height:42px;">' +
-        f'<span style="font-family:IBM Plex Mono,monospace;font-size:13px;font-weight:700;color:#555;">{si+1} / {n_slides}</span></div>',
+        f'<div style="display:flex;align-items:center;justify-content:center;gap:10px;height:42px;">' +
+        f'<span style="display:flex;align-items:center;gap:4px;">{_dots_html}</span>' +
+        f'<span style="font-family:IBM Plex Mono,monospace;font-size:12px;color:#555;white-space:nowrap;">{si+1} / {n_slides}</span>' +
+        '</div>',
         unsafe_allow_html=True
     )
 
 with _nc4:
-    st.markdown('<div style="height:42px;"></div>', unsafe_allow_html=True)
-
-with _nc5:
     st.markdown('<div class="bottom-next-btn">', unsafe_allow_html=True)
     if st.button("›", key="next_btn", disabled=(si == n_slides - 1), use_container_width=True):
         st.session_state.slide_idx += 1
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
+
+with _nc5:
+    st.markdown('<div style="height:42px;"></div>', unsafe_allow_html=True)
