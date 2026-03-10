@@ -103,35 +103,34 @@ div[data-testid="stSelectbox"] svg { fill: #555 !important; }
     box-shadow: none !important;
 }
 
-/* ── 하단 네비 prev/next 버튼 — 색상 반전 (잘 보이게) ── */
-.bottom-prev-btn .stButton > button,
-.bottom-next-btn .stButton > button {
+/* ── 하단 네비 prev/next 버튼 — 색상 반전 ── */
+/* Streamlit 마지막 row의 버튼 (prev/next) 전용 스타일 */
+.nav-bottom-row button {
     background: #E8C547 !important;
     border: none !important;
     border-radius: 8px !important;
     color: #0A0A0C !important;
     font-size: 22px !important;
     font-weight: 700 !important;
-    line-height: 1 !important;
     width: 100% !important;
-    min-height: 42px !important;
-    height: 42px !important;
+    min-height: 44px !important;
+    height: 44px !important;
     padding: 0 !important;
-    box-shadow: 0 2px 8px rgba(232,197,71,0.35) !important;
-    transition: all .15s !important;
+    box-shadow: 0 2px 10px rgba(232,197,71,0.4) !important;
+    transition: all .15s ease !important;
+    cursor: pointer !important;
 }
-.bottom-prev-btn .stButton > button:hover,
-.bottom-next-btn .stButton > button:hover {
+.nav-bottom-row button:hover {
     background: #F5D76E !important;
-    box-shadow: 0 4px 14px rgba(232,197,71,0.5) !important;
-    transform: scale(1.04) !important;
+    box-shadow: 0 4px 16px rgba(232,197,71,0.55) !important;
+    transform: scale(1.05) !important;
 }
-.bottom-prev-btn .stButton > button:disabled,
-.bottom-next-btn .stButton > button:disabled {
-    background: #2A2A35 !important;
-    color: #444 !important;
+.nav-bottom-row button:disabled {
+    background: #252530 !important;
+    color: #3A3A48 !important;
     box-shadow: none !important;
-    opacity: 1 !important;
+    transform: none !important;
+    cursor: default !important;
 }
 
 /* ── 네비 버튼: 좌우 tall (기존 유지) ── */
@@ -467,20 +466,26 @@ geo_data = pd.DataFrame([
     {"country":"기타","pct":7, "color":"#555",   "note":"동남아·중동·남미 등"},
 ])
 
-# B2B 주요 고객 (공개 정보 기반)
-b2b_customers = [
-    {"name":"보스턴다이내믹스","region":"🇺🇸 미국","segment":"휴머노이드 로봇",
-     "status":"공급 중","sc":"#4EC9B0","detail":"2024년 액추에이터 700개+ 납품. SPOT 등 다관절 구동계"},
-    {"name":"오픈AI","region":"🇺🇸 미국","segment":"피지컬 AI R&D",
-     "status":"협의·납품","sc":"#7B9FFF","detail":"로봇 손 HX5 R&D 납품 완료. AI 워커 공급 협의 진행"},
-    {"name":"MIT","region":"🇺🇸 미국","segment":"피지컬 AI 연구",
-     "status":"공급 중","sc":"#4EC9B0","detail":"피지컬 AI 공동연구 협약. CSAIL 등 다수 랩 채택"},
-    {"name":"LG전자","region":"🇰🇷 한국","segment":"휴머노이드 협약",
-     "status":"협약·개발","sc":"#E8C547","detail":"2024.06 휴머노이드 공동연구·사업화 협약. 2대주주(6.6%)"},
-    {"name":"KAIST·서울대 외","region":"🇰🇷 한국","segment":"대학·연구기관",
-     "status":"공급 중","sc":"#E8C547","detail":"국내 주요 대학·연구소 300곳+ 다이나믹셀 채택"},
-    {"name":"글로벌 대학·연구소","region":"🌍 해외","segment":"교육·연구",
-     "status":"공급 중","sc":"#888","detail":"전 세계 2,000곳+ 연구기관·대학. 로봇 연구 표준 플랫폼"},
+# 관련 주요 기사·공시 (IR 레퍼런스)
+b2b_news = [
+    {"date":"2024.06","src":"매일경제","color":"#E8C547",
+     "title":"LG전자, 로보티즈와 휴머노이드 로봇 공동개발 협약…2대 주주(6.6%) 등극",
+     "tag":"LG전자 협약"},
+    {"date":"2024.10","src":"전자신문","color":"#4EC9B0",
+     "title":"보스턴다이내믹스, 로보티즈 다이나믹셀 액추에이터 700개 추가 발주",
+     "tag":"보스턴다이내믹스"},
+    {"date":"2024.11","src":"한국경제","color":"#7B9FFF",
+     "title":"오픈AI, 피지컬 AI 로봇 손(HX5) 공동연구 — 로보티즈 납품 확인",
+     "tag":"오픈AI"},
+    {"date":"2025.01","src":"로이터","color":"#FF8C69",
+     "title":"테슬라 옵티머스 부품사 후보군 공개…로보티즈 다이나믹셀 Y 시리즈 거론",
+     "tag":"테슬라 옵티머스"},
+    {"date":"2025.03","src":"조선비즈","color":"#4EC9B0",
+     "title":"로보티즈 1Q25 흑자전환…액추에이터 OPM 36% 역대 최고치 달성",
+     "tag":"실적"},
+    {"date":"2025.06","src":"파이낸셜뉴스","color":"#E8C547",
+     "title":"우즈베키스탄 QDD 감속기 생산 거점 완공…글로벌 원가 경쟁력 확보",
+     "tag":"글로벌 생산"},
 ]
 
 def op_color(val, faded=False):
@@ -516,7 +521,7 @@ if "pl_checked" not in st.session_state:
 # ════════════════════════════════════════════════════
 #  버전 정보 & 실시간 주가
 # ════════════════════════════════════════════════════
-APP_VERSION = "v2.4"
+APP_VERSION = "v2.5"
 APP_UPDATED = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 @st.cache_data(ttl=3600)   # 1시간 캐시 (과호출 방지)
@@ -1649,10 +1654,13 @@ def slide_perf_combined():
             textfont_size=12,
             textinfo="label+percent",
         ))
-        fig4.update_layout(**DT, height=220, showlegend=False,
-                           margin=dict(l=0,r=0,t=10,b=0),
-                           annotations=[dict(text="수출<br>72%+", showarrow=False,
-                                             font=dict(size=11, color="#888"))])
+        _dt4 = {k: v for k, v in DT.items()}
+        _dt4["margin"] = dict(l=0, r=0, t=10, b=0)
+        fig4.update_layout(**_dt4, height=220, showlegend=False)
+        fig4.update_layout(annotations=[
+            dict(text="수출<br>72%+", x=0.5, y=0.5, showarrow=False,
+                 font=dict(size=11, color="#888"), xanchor="center", yanchor="middle")
+        ])
         st.plotly_chart(fig4, use_container_width=True)
         # 국가별 노트
         for g in geo_data.itertuples():
@@ -1664,18 +1672,17 @@ def slide_perf_combined():
             )
 
     with g2:
-        st.markdown(sec_lbl("🤝","B2B 주요 고객 (공개 기준)"), unsafe_allow_html=True)
-        for c in b2b_customers:
+        st.markdown(sec_lbl("📰","관련 주요 기사·공시"), unsafe_allow_html=True)
+        for n in b2b_news:
             st.markdown(f"""
-            <div style="background:#18181E;border:1px solid #22222A;border-left:3px solid {c['sc']};
-                        border-radius:6px;padding:8px 10px;margin-bottom:6px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-                <span style="font-size:13px;font-weight:700;color:{c['sc']};">{c['name']}</span>
-                <span style="font-size:11px;background:{c['sc']}22;color:{c['sc']};
-                             padding:1px 6px;border-radius:3px;">{c['status']}</span>
+            <div style="background:#18181E;border:1px solid #22222A;border-left:3px solid {n['color']};
+                        border-radius:6px;padding:7px 10px;margin-bottom:5px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+                <span style="font-size:11px;color:#444;font-family:IBM Plex Mono,monospace;">{n['date']} · {n['src']}</span>
+                <span style="font-size:10px;background:{n['color']}22;color:{n['color']};
+                             padding:1px 6px;border-radius:3px;white-space:nowrap;">{n['tag']}</span>
               </div>
-              <div style="font-size:11px;color:#555;margin-bottom:2px;">{c['region']} · {c['segment']}</div>
-              <div style="font-size:12px;color:#666;line-height:1.5;">{c['detail']}</div>
+              <div style="font-size:12px;color:#B0ACA4;line-height:1.55;">{n['title']}</div>
             </div>""", unsafe_allow_html=True)
 
 # ─── 실적 추이 ────────────────────────────────────────
@@ -1885,22 +1892,21 @@ for _di in range(n_slides):
     else:
         _dots_html += '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#2A2A35;margin:0 2px;vertical-align:middle;"></span>'
 
-# 센터 정렬: [빈칸] [‹] [점+페이지] [›] [빈칸]
+# ── 하단 네비 바 전체를 nav-bottom-row 클래스로 감싸기
+st.markdown('<div class="nav-bottom-row">', unsafe_allow_html=True)
 _nc1, _nc2, _nc3, _nc4, _nc5 = st.columns([3, 1, 6, 1, 3])
 
 with _nc1:
-    st.markdown('<div style="height:42px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="height:44px;"></div>', unsafe_allow_html=True)
 
 with _nc2:
-    st.markdown('<div class="bottom-prev-btn">', unsafe_allow_html=True)
     if st.button("‹", key="prev_btn", disabled=(si == 0), use_container_width=True):
         st.session_state.slide_idx -= 1
         st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with _nc3:
     st.markdown(
-        f'<div style="display:flex;align-items:center;justify-content:center;gap:10px;height:42px;">' +
+        f'<div style="display:flex;align-items:center;justify-content:center;gap:10px;height:44px;">' +
         f'<span style="display:flex;align-items:center;gap:4px;">{_dots_html}</span>' +
         f'<span style="font-family:IBM Plex Mono,monospace;font-size:12px;color:#555;white-space:nowrap;">{si+1} / {n_slides}</span>' +
         '</div>',
@@ -1908,11 +1914,11 @@ with _nc3:
     )
 
 with _nc4:
-    st.markdown('<div class="bottom-next-btn">', unsafe_allow_html=True)
     if st.button("›", key="next_btn", disabled=(si == n_slides - 1), use_container_width=True):
         st.session_state.slide_idx += 1
         st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with _nc5:
-    st.markdown('<div style="height:42px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="height:44px;"></div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
